@@ -49,6 +49,12 @@ android {
 }
 
 dependencies {
+    implementation(project(":feat:home"))
+    implementation(project(":feat:favorites"))
+    implementation(project(":feat:contentdetail"))
+
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:navigation"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
