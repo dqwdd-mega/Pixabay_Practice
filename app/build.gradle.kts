@@ -38,6 +38,13 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/gradle/incremental.annotation.processors"
+            )
+        }
+    }
 }
 
 dependencies {
