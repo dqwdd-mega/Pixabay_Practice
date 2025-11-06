@@ -27,7 +27,7 @@ abstract class BaseViewModel<State : BaseContract.UiState, Event : BaseContract.
     abstract suspend fun handleEvent(event: Event)
 
     // 사이드 이펙트 설정
-    protected fun setSideEffect(effect: SideEffect) {
+    protected fun postSideEffect(effect: SideEffect) {
         viewModelScope.launch {
             _sideEffect.send(effect)
         }
@@ -37,6 +37,15 @@ abstract class BaseViewModel<State : BaseContract.UiState, Event : BaseContract.
      * action이 발생하면 event 전달
      */
     fun intent(event: Event) {
+        viewModelScope.launch {
+            handleEvent(event)
+        }
+    }
+
+    /**
+     * action이 발생하면 event 전달 - Throttle 처리
+     */
+    fun intentThrottle(event: Event) {
         handleEventWithThrottle {
             handleEvent(event)
         }
@@ -53,7 +62,7 @@ abstract class BaseViewModel<State : BaseContract.UiState, Event : BaseContract.
     // Throttle 설정을 위한 변수
     private val lastEventExecutionTime = ConcurrentHashMap<String, Long>()
 
-    private fun handleEventWithThrottle(
+    private fun executeWithThrottle(
         eventId: String,
         throttleTime: Long = 800L,
         action: suspend () -> Unit
@@ -81,6 +90,6 @@ abstract class BaseViewModel<State : BaseContract.UiState, Event : BaseContract.
     ) {
         // 액션 함수의 해시코드로 고유 ID 생성
         val eventId = "action_${action.hashCode()}"
-        handleEventWithThrottle(eventId, throttleTime, action)
+        executeWithThrottle(eventId, throttleTime, action)
     }
 }
