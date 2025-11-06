@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tving_task_2025_11_05"
 include(":app")
- 
+include(":feat:home")
