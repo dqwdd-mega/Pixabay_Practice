@@ -23,3 +23,4 @@ rootProject.name = "Tving_task_2025_11_05"
 include(":app")
 include(":feat:home")
 include(":feat:favorites")
+include(":feat:contentdetail")
