@@ -16,6 +16,8 @@ object HomeContract {
         val images: List<ImageSearch> = emptyList(),
         val currentImagePage: Int = 1,
         val searchImagePagingLoading: Boolean = false,
+        val totalImageHits: Int = 0,
+        val perPage: Int = 20,
     ) : BaseContract.UiState
 
     sealed interface Event : BaseContract.Event {

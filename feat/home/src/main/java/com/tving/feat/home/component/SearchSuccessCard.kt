@@ -55,7 +55,8 @@ fun SearchSuccessCard(
         derivedStateOf {
             val lastVisibleItem = gridState.layoutInfo.visibleItemsInfo.lastOrNull()
             val totalItems = gridState.layoutInfo.totalItemsCount
-            lastVisibleItem != null && lastVisibleItem.index >= totalItems - 3 && !state.searchImagePagingLoading
+            val hasMoreImages = state.images.size < state.totalImageHits
+            lastVisibleItem != null && lastVisibleItem.index >= totalItems - 3 && !state.searchImagePagingLoading && hasMoreImages
         }
     }
 

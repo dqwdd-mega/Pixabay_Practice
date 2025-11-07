@@ -40,7 +40,7 @@ class HomeViewModel @Inject constructor(
                 resetImagePage()
 
                 val videoResult = getSearchVideoUseCase(query = searchText)
-                val imageResult = getSearchImageUseCase(query = searchText, page = 1)
+                val imageResult = getSearchImageUseCase(query = searchText, page = 1, perPage = state.value.perPage)
 
                 val hasResults = videoResult.data.isNotEmpty() || imageResult.data.isNotEmpty()
 
@@ -48,6 +48,7 @@ class HomeViewModel @Inject constructor(
                     updateSearchState(SearchState.Success)
                     handleVideoResults(videoResult.data)
                     handleImageResults(imageResult.data, isAppend = false)
+                    updateTotalImageHits(imageResult.totalHits)
                 } else {
                     updateSearchState(SearchState.Empty)
                 }
@@ -67,15 +68,20 @@ class HomeViewModel @Inject constructor(
         val searchText = state.value.searchText
         if (searchText.isEmpty()) return
         if (state.value.searchImagePagingLoading) return
+        
+        val currentState = state.value
+        val loadedImagesCount = currentState.images.size
+        if (loadedImagesCount >= currentState.totalImageHits) return
 
         viewModelScope.launch {
             try {
                 updateSearchImagePagingLoading(true)
                 
-                val nextPage = state.value.currentImagePage + 1
+                val nextPage = currentState.currentImagePage + 1
                 val result = getSearchImageUseCase(
                     query = searchText, 
-                    page = nextPage
+                    page = nextPage,
+                    perPage = currentState.perPage
                 )
 
                 if (result.data.isNotEmpty()) {
@@ -136,10 +142,14 @@ class HomeViewModel @Inject constructor(
      * 검색 시작 시 페이지 리셋
      */
     private fun resetImagePage() {
-        reduce { copy(currentImagePage = 1, images = emptyList()) }
+        reduce { copy(currentImagePage = 1, images = emptyList(), totalImageHits = 0) }
     }
 
     private fun updateSearchImagePagingLoading(loading: Boolean) {
         reduce { copy(searchImagePagingLoading = loading) }
+    }
+
+    private fun updateTotalImageHits(totalHits: Int) {
+        reduce { copy(totalImageHits = totalHits) }
     }
 }
