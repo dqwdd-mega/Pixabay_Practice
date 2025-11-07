@@ -139,7 +139,7 @@ private fun PreviewSearchInputTextField() {
                 modifier = Modifier
                     .padding(start = 10.dp),
                 painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = "buttonClose",
+                contentDescription = "search",
             )
         },
         rightContent = {
@@ -147,7 +147,7 @@ private fun PreviewSearchInputTextField() {
                 modifier = Modifier
                     .padding(end = 20.dp),
                 painter = painterResource(id = R.drawable.ic_close_circle),
-                contentDescription = "buttonClose",
+                contentDescription = "close button",
             )
             Box(
                 modifier = Modifier
