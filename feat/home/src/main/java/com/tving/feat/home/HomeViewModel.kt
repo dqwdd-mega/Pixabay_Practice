@@ -54,7 +54,17 @@ class HomeViewModel @Inject constructor(
     private fun getFavoriteVideos() {
         getFavoriteVideosUseCase()
             .onEach { favoriteVideos ->
-                reduce { copy(favoriteVideos = favoriteVideos) }
+                reduce { 
+                    val currentFirstVideo = firstVideo
+                    val updatedIsFirstVideoFavorite = currentFirstVideo?.let { video ->
+                        favoriteVideos.any { it.id == video.id }
+                    } ?: false
+                    
+                    copy(
+                        favoriteVideos = favoriteVideos,
+                        isFirstVideoFavorite = updatedIsFirstVideoFavorite
+                    )
+                }
             }
             .launchIn(viewModelScope)
     }
@@ -140,7 +150,17 @@ class HomeViewModel @Inject constructor(
 
     private fun handleVideoResults(videos: List<VideoSearch>) {
         if (videos.isNotEmpty()) {
-            reduce { copy(firstVideo = videos.first()) }
+            val video = videos.first()
+            val currentFavoriteVideos = state.value.favoriteVideos
+
+            val isFavorite = currentFavoriteVideos.any { it.id == video.id }
+            
+            reduce { 
+                copy(
+                    firstVideo = video,
+                    isFirstVideoFavorite = isFavorite
+                )
+            }
         }
     }
 

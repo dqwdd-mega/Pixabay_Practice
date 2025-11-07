@@ -20,12 +20,8 @@ object HomeContract {
         val perPage: Int = 20,
         val favoriteVideos: List<VideoSearch> = emptyList(),
         val favoriteImages: List<ImageSearch> = emptyList(),
+        val isFirstVideoFavorite: Boolean = false,
     ) : BaseContract.UiState {
-        val isFirstVideoFavorite: Boolean
-            get() = firstVideo?.let { video -> 
-                favoriteVideos.any { it.id == video.id }
-            } ?: false
-        
         fun isImageFavorite(imageId: Int): Boolean {
             return favoriteImages.any { it.id == imageId }
         }

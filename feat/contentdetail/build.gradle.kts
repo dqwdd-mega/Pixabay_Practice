@@ -39,6 +39,8 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:data"))
+    implementation(project(":core:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -61,6 +63,11 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation)
 
-    //navigation
+    // navigation
     implementation(libs.compose.navigation)
+
+    // coil
+    implementation(libs.coil)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.svg)
 }
