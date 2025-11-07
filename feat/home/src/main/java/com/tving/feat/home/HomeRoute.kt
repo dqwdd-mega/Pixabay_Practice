@@ -1,36 +1,25 @@
 package com.tving.feat.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tving.core.designsystem.R
-import com.tving.core.designsystem.component.TvingInputTextField
-import com.tving.core.designsystem.theme.ColorTokens.Black
-import com.tving.core.designsystem.theme.ColorTokens.Black212121
 import com.tving.core.designsystem.theme.ColorTokens.White
+import com.tving.feat.home.component.HomeSearchBar
 import com.tving.feat.home.component.SearchEmptyCard
 import com.tving.feat.home.component.SearchFailCard
 import com.tving.feat.home.component.SearchIdleCard
@@ -65,8 +54,6 @@ fun HomeScreen(
     onClickOnOffVideoFavorite: () -> Unit = {},
     onClickOnOffImageFavorite: (com.tving.core.domain.model.pixabay.ImageSearch) -> Unit = {},
 ) {
-    val focusManager = LocalFocusManager.current
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,51 +64,14 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TvingInputTextField(
+            HomeSearchBar(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.searchText,
                 onValueChange = onChangeSearchText,
+                onClickClear = onClickSearchTextClear,
+                onSearch = searchContent,
+                showRightContent = state.showSearchRightContent,
                 placeholderText = stringResource(com.tving.feat.home.R.string.text_for_search_placeholder),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                        searchContent()
-                    }
-                ),
-                hasLeftContent = true,
-                hasRightContent = state.showSearchRightContent,
-                leftContent = {
-                    Image(
-                        modifier = Modifier.padding(start = 10.dp),
-                        painter = painterResource(id = R.drawable.ic_search),
-                        contentDescription = "buttonClose",
-                    )
-                },
-                rightContent = {
-                    Image(
-                        modifier = Modifier
-                            .padding(end = 20.dp)
-                            .clickable { onClickSearchTextClear() },
-                        painter = painterResource(id = R.drawable.ic_close_circle),
-                        contentDescription = "buttonClose",
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(1.dp)
-                            .background(color = Black212121)
-                    )
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 10.dp,
-                                vertical = 15.dp
-                            )
-                            .clickable { focusManager.clearFocus() },
-                        text = "Cancel",
-                        color = Black,
-                    )
-                },
             )
 
             Spacer(modifier = Modifier.height(30.dp))

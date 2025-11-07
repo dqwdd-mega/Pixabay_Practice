@@ -1,6 +1,6 @@
 package com.tving.core.domain.usecase
 
-import com.tving.core.domain.repository.FavoriteRepository
+import com.tving.core.domain.repository.datastore.FavoriteRepository
 import javax.inject.Inject
 
 class RemoveFavoriteImageUseCase @Inject constructor(
