@@ -3,7 +3,7 @@ package com.tving.core.data.local.repository
 import com.tving.core.data.local.datasource.FavoriteVideoDataSource
 import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
-import com.tving.core.domain.repository.FavoriteRepository
+import com.tving.core.domain.repository.datastore.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

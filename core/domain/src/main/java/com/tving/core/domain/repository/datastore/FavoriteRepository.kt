@@ -1,4 +1,4 @@
-package com.tving.core.domain.repository
+package com.tving.core.domain.repository.datastore
 
 import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
