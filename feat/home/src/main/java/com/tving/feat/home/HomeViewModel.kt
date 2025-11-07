@@ -19,4 +19,22 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    private fun updateLoading(loading: Boolean) {
+        reduce { copy(loading = loading) }
+    }
+
+    fun updateSearchText(text: String) {
+        reduce { copy(searchText = text) }
+
+        if (text.isEmpty()) {
+            updateShowSearchRightContent(false)
+        } else {
+            updateShowSearchRightContent(true)
+        }
+    }
+
+    private fun updateShowSearchRightContent(show: Boolean) {
+        reduce { copy(showSearchRightContent = show) }
+    }
 }
