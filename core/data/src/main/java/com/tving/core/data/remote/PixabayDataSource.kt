@@ -5,6 +5,6 @@ import com.tving.core.data.model.image.ImageSearchResponse
 import com.tving.core.data.model.video.VideoSearchResponse
 
 interface PixabayDataSource {
-    suspend fun searchVideo(key: String, query: String): BaseResponse<List<VideoSearchResponse>>
-    suspend fun searchImage(key: String, query: String, imageType: String): BaseResponse<List<ImageSearchResponse>>
+    suspend fun searchVideo(query: String): BaseResponse<List<VideoSearchResponse>>
+    suspend fun searchImage(query: String, imageType: String): BaseResponse<List<ImageSearchResponse>>
 }

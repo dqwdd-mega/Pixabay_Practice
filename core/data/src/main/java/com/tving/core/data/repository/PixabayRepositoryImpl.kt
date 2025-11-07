@@ -11,15 +11,14 @@ import javax.inject.Inject
 class PixabayRepositoryImpl @Inject constructor(
     private val dataSource: PixabayDataSource
 ) : PixabayRepository {
-    override suspend fun searchVideo(key: String, query: String): BaseResult<List<VideoSearch>> {
-        return dataSource.searchVideo(key, query).toDomain()
+    override suspend fun searchVideo(query: String): BaseResult<List<VideoSearch>> {
+        return dataSource.searchVideo(query).toDomain()
     }
 
     override suspend fun searchImage(
-        key: String,
         query: String,
         imageType: String
     ): BaseResult<List<ImageSearch>> {
-        return dataSource.searchImage(key, query, imageType).toDomain()
+        return dataSource.searchImage(query, imageType).toDomain()
     }
 }

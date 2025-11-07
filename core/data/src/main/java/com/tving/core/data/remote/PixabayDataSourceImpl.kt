@@ -10,17 +10,15 @@ class PixabayDataSourceImpl @Inject constructor(
     private val service: PixabayService,
 ) : PixabayDataSource {
     override suspend fun searchVideo(
-        key: String,
         query: String
     ): BaseResponse<List<VideoSearchResponse>> {
-        return service.searchVideo(key = key, q = query)
+        return service.searchVideo(q = query)
     }
 
     override suspend fun searchImage(
-        key: String,
         query: String,
         imageType: String
     ): BaseResponse<List<ImageSearchResponse>> {
-        return service.searchImage(key = key, q = query, imageType = imageType)
+        return service.searchImage(q = query, imageType = imageType)
     }
 }

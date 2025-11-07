@@ -13,6 +13,8 @@ android {
         minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        buildConfigField("String", "PIXABAY_API_KEY", "\"${project.properties["PIXABAY_API_KEY"]}\"")
     }
 
     buildTypes {
@@ -30,6 +32,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

@@ -9,10 +9,9 @@ class GetSearchImageUseCase @Inject constructor(
     private val repository: PixabayRepository
 ) {
     suspend operator fun invoke(
-        key: String,
         query: String,
         imageType: String = "all"
     ): BaseResult<List<ImageSearch>> {
-        return repository.searchImage(key, query, imageType)
+        return repository.searchImage(query, imageType)
     }
 }

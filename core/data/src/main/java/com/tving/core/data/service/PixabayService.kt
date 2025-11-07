@@ -10,13 +10,11 @@ interface PixabayService {
 
     @GET("api/videos/")
     suspend fun searchVideo(
-        @Query("key") key: String,
         @Query("q") q: String
     ): BaseResponse<List<VideoSearchResponse>>
 
     @GET("api/")
     suspend fun searchImage(
-        @Query("key") key: String,
         @Query("q") q: String,
         @Query("image_type") imageType: String,
     ): BaseResponse<List<ImageSearchResponse>>

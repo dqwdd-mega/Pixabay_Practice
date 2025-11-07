@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetSearchVideoUseCase @Inject constructor(
     private val repository: PixabayRepository
 ) {
-    suspend operator fun invoke(key: String, query: String): BaseResult<List<VideoSearch>> {
-        return repository.searchVideo(key, query)
+    suspend operator fun invoke(query: String): BaseResult<List<VideoSearch>> {
+        return repository.searchVideo(query)
     }
 }
