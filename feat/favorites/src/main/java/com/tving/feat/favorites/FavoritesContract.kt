@@ -20,7 +20,13 @@ object FavoritesContract {
         }
     }
 
-    sealed interface Event : BaseContract.Event
+    sealed interface Event : BaseContract.Event {
+        data class ClickVideoContent(val video: VideoSearch) : Event
+        data class ClickImageContent(val image: ImageSearch) : Event
+    }
 
-    sealed interface SideEffect : BaseContract.SideEffect
+    sealed interface SideEffect : BaseContract.SideEffect {
+        data class NavigateToContentDetailWithVideo(val video: VideoSearch) : SideEffect
+        data class NavigateToContentDetailWithImage(val image: ImageSearch) : SideEffect
+    }
 }

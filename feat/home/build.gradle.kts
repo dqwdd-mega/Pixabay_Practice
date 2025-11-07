@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":feat:contentdetail"))
 
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))

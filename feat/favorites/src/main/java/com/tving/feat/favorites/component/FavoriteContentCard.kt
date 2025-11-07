@@ -42,6 +42,8 @@ fun FavoriteContentCard(
     images: List<ImageSearch>,
     isVideoFavorite: (Int) -> Boolean = { false },
     isImageFavorite: (Int) -> Boolean = { false },
+    onClickVideoContent: (VideoSearch) -> Unit = {},
+    onClickImageContent: (ImageSearch) -> Unit = {},
     onClickOnOffVideoFavorite: (VideoSearch) -> Unit = {},
     onClickOnOffImageFavorite: (ImageSearch) -> Unit = {},
 ) {
@@ -90,6 +92,7 @@ fun FavoriteContentCard(
                     path = video.thumbnailUrl,
                     tags = video.tags,
                     isFavorite = isVideoFavorite(video.id),
+                    onClickContent = { onClickVideoContent(video) },
                     onClickFavorite = { onClickOnOffVideoFavorite(video) }
                 )
             }
@@ -113,6 +116,7 @@ fun FavoriteContentCard(
                     path = image.previewURL,
                     tags = image.tags,
                     isFavorite = isImageFavorite(image.id),
+                    onClickContent = { onClickImageContent(image) },
                     onClickFavorite = { onClickOnOffImageFavorite(image) }
                 )
             }
@@ -143,11 +147,13 @@ fun FavoriteItem(
     path: String,
     tags: String,
     isFavorite: Boolean = false,
-    onClickFavorite: () -> Unit = {}
+    onClickContent: () -> Unit = {},
+    onClickFavorite: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onClickContent() }
             .aspectRatio(1f)
             .background(color = GreyD9D9D9)
             .border(

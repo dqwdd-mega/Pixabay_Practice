@@ -1,6 +1,5 @@
 package com.tving.feat.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tving.core.common.base.BaseViewModel
 import com.tving.core.domain.model.pixabay.ImageSearch
@@ -48,18 +47,28 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is HomeContract.Event.ClickSearch -> searchContent()
             is HomeContract.Event.ClickOnOffVideoFavorite -> onOffVideoFavorite()
+            is HomeContract.Event.ClickVideoContent -> {
+                postSideEffect(
+                    HomeContract.SideEffect.NavigateToContentDetailWithVideo(event.video)
+                )
+            }
+            is HomeContract.Event.ClickImageContent -> {
+                postSideEffect(
+                    HomeContract.SideEffect.NavigateToContentDetailWithImage(event.image)
+                )
+            }
         }
     }
 
     private fun getFavoriteVideos() {
         getFavoriteVideosUseCase()
             .onEach { favoriteVideos ->
-                reduce { 
+                reduce {
                     val currentFirstVideo = firstVideo
                     val updatedIsFirstVideoFavorite = currentFirstVideo?.let { video ->
                         favoriteVideos.any { it.id == video.id }
                     } ?: false
-                    
+
                     copy(
                         favoriteVideos = favoriteVideos,
                         isFirstVideoFavorite = updatedIsFirstVideoFavorite
@@ -90,7 +99,11 @@ class HomeViewModel @Inject constructor(
                 resetImagePage()
 
                 val videoResult = getSearchVideoUseCase(query = searchText)
-                val imageResult = getSearchImageUseCase(query = searchText, page = 1, perPage = state.value.perPage)
+                val imageResult = getSearchImageUseCase(
+                    query = searchText,
+                    page = 1,
+                    perPage = state.value.perPage
+                )
 
                 val hasResults = videoResult.data.isNotEmpty() || imageResult.data.isNotEmpty()
 
@@ -103,7 +116,6 @@ class HomeViewModel @Inject constructor(
                     updateSearchState(SearchState.Empty)
                 }
             } catch (e: Exception) {
-                Log.e("tetest", "tetest, Exception === ${e.message}", e)
                 updateSearchState(SearchState.Fail)
             } finally {
                 updateLoading(false)
@@ -118,7 +130,7 @@ class HomeViewModel @Inject constructor(
         val searchText = state.value.searchText
         if (searchText.isEmpty()) return
         if (state.value.searchImagePagingLoading) return
-        
+
         val currentState = state.value
         val loadedImagesCount = currentState.images.size
         if (loadedImagesCount >= currentState.totalImageHits) return
@@ -126,10 +138,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updateSearchImagePagingLoading(true)
-                
+
                 val nextPage = currentState.currentImagePage + 1
                 val result = getSearchImageUseCase(
-                    query = searchText, 
+                    query = searchText,
                     page = nextPage,
                     perPage = currentState.perPage
                 )
@@ -140,7 +152,6 @@ class HomeViewModel @Inject constructor(
                 }
 
             } catch (e: Exception) {
-                Log.e("tetest", "tetest, loadMore Exception === ${e.message}", e)
                 e.printStackTrace()
             } finally {
                 updateSearchImagePagingLoading(false)
@@ -154,8 +165,8 @@ class HomeViewModel @Inject constructor(
             val currentFavoriteVideos = state.value.favoriteVideos
 
             val isFavorite = currentFavoriteVideos.any { it.id == video.id }
-            
-            reduce { 
+
+            reduce {
                 copy(
                     firstVideo = video,
                     isFirstVideoFavorite = isFavorite
@@ -215,7 +226,7 @@ class HomeViewModel @Inject constructor(
 
     fun onOffVideoFavorite() {
         val video = state.value.firstVideo ?: return
-        
+
         viewModelScope.launch {
             if (isFavoriteVideoUseCase(video.id)) {
                 removeFavoriteVideoUseCase(video.id)

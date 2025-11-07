@@ -34,7 +34,8 @@ fun VideoComponent(
     videoUrl: String,
     thumbnailUrl: String,
     favoriteOnOff: Boolean,
-    onFavoriteClick: () -> Unit = {}
+    onFavoriteClick: () -> Unit = {},
+    onVideoClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     var isPlaying by remember { mutableStateOf(false) }
@@ -78,7 +79,9 @@ fun VideoComponent(
                     .crossfade(true)
                     .build(),
                 contentDescription = "video thumbnail",
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { onVideoClick() },
                 contentScale = ContentScale.Crop
             )
 
@@ -88,6 +91,10 @@ fun VideoComponent(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .size(48.dp)
+                    .clickable {
+                        isPlaying = true
+                        exoPlayer.play()
+                    }
             )
 
             Image(

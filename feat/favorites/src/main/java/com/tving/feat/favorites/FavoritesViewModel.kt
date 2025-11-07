@@ -1,6 +1,5 @@
 package com.tving.feat.favorites
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tving.core.common.base.BaseViewModel
 import com.tving.core.domain.model.pixabay.ImageSearch
@@ -40,13 +39,24 @@ class FavoritesViewModel @Inject constructor(
     }
 
     override suspend fun handleEvent(event: FavoritesContract.Event) {
+        when (event) {
+            is FavoritesContract.Event.ClickVideoContent -> {
+                postSideEffect(
+                    FavoritesContract.SideEffect.NavigateToContentDetailWithVideo(event.video)
+                )
+            }
+            is FavoritesContract.Event.ClickImageContent -> {
+                postSideEffect(
+                    FavoritesContract.SideEffect.NavigateToContentDetailWithImage(event.image)
+                )
+            }
+        }
     }
 
     private fun getFavoriteVideos() {
         getFavoriteVideosUseCase()
             .onEach { favoriteVideos ->
                 reduce { copy(favoriteVideos = favoriteVideos) }
-                Log.e("tetest", "tetest, 111, favoriteVideos === $favoriteVideos")
             }
             .launchIn(viewModelScope)
     }

@@ -30,9 +30,12 @@ object HomeContract {
     sealed interface Event : BaseContract.Event {
         data object ClickSearch : Event
         data object ClickOnOffVideoFavorite : Event
+        data class ClickVideoContent(val video: VideoSearch) : Event
+        data class ClickImageContent(val image: ImageSearch) : Event
     }
 
     sealed interface SideEffect : BaseContract.SideEffect {
-        data object NavigateToContentDetail : SideEffect
+        data class NavigateToContentDetailWithVideo(val video: VideoSearch) : SideEffect
+        data class NavigateToContentDetailWithImage(val image: ImageSearch) : SideEffect
     }
 }

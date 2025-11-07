@@ -54,6 +54,8 @@ fun SearchSuccessCard(
     onClickOnOffVideoFavorite: () -> Unit = {},
     isImageFavorite: (Int) -> Boolean = { false },
     onClickOnOffImageFavorite: (com.tving.core.domain.model.pixabay.ImageSearch) -> Unit = {},
+    onClickVideoContent: (com.tving.core.domain.model.pixabay.VideoSearch) -> Unit = {},
+    onClickImageContent: (com.tving.core.domain.model.pixabay.ImageSearch) -> Unit = {},
 ) {
     val configuration = LocalConfiguration.current
     val isLand = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -108,7 +110,8 @@ fun SearchSuccessCard(
             FeaturedVideoSection(
                 firstVideo = firstVideo,
                 videoFavorite = videoFavorite,
-                onOnOffVideoFavorite = onClickOnOffVideoFavorite
+                onOnOffVideoFavorite = onClickOnOffVideoFavorite,
+                onClickVideo = onClickVideoContent
             )
         }
 
@@ -117,7 +120,8 @@ fun SearchSuccessCard(
             SearchImageItem(
                 image = image,
                 isFavorite = isImageFavorite(image.id),
-                onClickFavorite = { onClickOnOffImageFavorite(image) }
+                onClickFavorite = { onClickOnOffImageFavorite(image) },
+                onClickImage = { onClickImageContent(image) }
             )
         }
 
@@ -142,6 +146,7 @@ fun FeaturedVideoSection(
     firstVideo: com.tving.core.domain.model.pixabay.VideoSearch?,
     videoFavorite: Boolean = false,
     onOnOffVideoFavorite: () -> Unit = {},
+    onClickVideo: (com.tving.core.domain.model.pixabay.VideoSearch) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         Text(
@@ -159,7 +164,8 @@ fun FeaturedVideoSection(
                 videoUrl = video.videoUrl,
                 thumbnailUrl = video.thumbnailUrl,
                 favoriteOnOff = videoFavorite,
-                onFavoriteClick = onOnOffVideoFavorite
+                onFavoriteClick = onOnOffVideoFavorite,
+                onVideoClick = { onClickVideo(video) }
             )
         } ?: run {
             Box(
@@ -202,7 +208,8 @@ fun SearchImageItem(
     modifier: Modifier = Modifier,
     image: com.tving.core.domain.model.pixabay.ImageSearch,
     isFavorite: Boolean = false,
-    onClickFavorite: () -> Unit = {}
+    onClickFavorite: () -> Unit = {},
+    onClickImage: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -212,7 +219,8 @@ fun SearchImageItem(
             .border(
                 width = 1.dp,
                 color = Black
-            ),
+            )
+            .clickable { onClickImage() },
     ) {
         AsyncImage(
             model = image.previewURL,
