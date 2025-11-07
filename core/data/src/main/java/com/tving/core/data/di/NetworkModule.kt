@@ -2,7 +2,7 @@ package com.tving.core.data.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.tving.core.data.interceptor.PixabayApiKeyInterceptor
+import com.tving.core.data.interceptor.PixabayAddParameterInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,23 +28,25 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providePixabayApiKeyInterceptor(): PixabayApiKeyInterceptor {
-        return PixabayApiKeyInterceptor(
-            apiKey = com.tving.core.data.BuildConfig.PIXABAY_API_KEY
+    fun providePixabayApiKeyInterceptor(): PixabayAddParameterInterceptor {
+        return PixabayAddParameterInterceptor(
+            apiKey = com.tving.core.data.BuildConfig.PIXABAY_API_KEY,
+            lang = "ko",
+            safeSearch = true
         )
     }
 
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        apiKeyInterceptor: PixabayApiKeyInterceptor
+        addParameterInterceptor: PixabayAddParameterInterceptor
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
         return OkHttpClient.Builder()
-            .addInterceptor(apiKeyInterceptor)
+            .addInterceptor(addParameterInterceptor)
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
