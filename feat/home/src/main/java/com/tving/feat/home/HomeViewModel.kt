@@ -3,8 +3,8 @@ package com.tving.feat.home
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tving.core.common.base.BaseViewModel
-import com.tving.core.domain.model.image.ImageSearch
-import com.tving.core.domain.model.video.VideoSearch
+import com.tving.core.domain.model.pixabay.ImageSearch
+import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.core.domain.usecase.GetSearchImageUseCase
 import com.tving.core.domain.usecase.GetSearchVideoUseCase
 import com.tving.feat.home.model.SearchState

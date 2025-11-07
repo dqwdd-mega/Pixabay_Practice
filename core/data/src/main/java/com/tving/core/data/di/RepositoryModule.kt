@@ -1,6 +1,6 @@
 package com.tving.core.data.di
 
-import com.tving.core.data.repository.PixabayRepositoryImpl
+import com.tving.core.data.remote.repository.PixabayRepositoryImpl
 import com.tving.core.domain.repository.PixabayRepository
 import dagger.Binds
 import dagger.Module

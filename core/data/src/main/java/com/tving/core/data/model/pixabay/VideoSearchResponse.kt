@@ -1,4 +1,4 @@
-package com.tving.core.data.model.video
+package com.tving.core.data.model.pixabay
 
 import com.google.gson.annotations.SerializedName
 

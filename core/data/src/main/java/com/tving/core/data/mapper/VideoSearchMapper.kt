@@ -1,9 +1,9 @@
 package com.tving.core.data.mapper
 
 import com.tving.core.data.model.BaseResponse
-import com.tving.core.data.model.video.VideoSearchResponse
+import com.tving.core.data.model.pixabay.VideoSearchResponse
 import com.tving.core.domain.model.BaseResult
-import com.tving.core.domain.model.video.VideoSearch
+import com.tving.core.domain.model.pixabay.VideoSearch
 
 fun BaseResponse<List<VideoSearchResponse>>.toDomain(): BaseResult<List<VideoSearch>> {
     return BaseResult(

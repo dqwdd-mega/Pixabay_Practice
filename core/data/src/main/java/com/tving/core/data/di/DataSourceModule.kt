@@ -1,7 +1,7 @@
 package com.tving.core.data.di
 
-import com.tving.core.data.remote.PixabayDataSource
-import com.tving.core.data.remote.PixabayDataSourceImpl
+import com.tving.core.data.remote.datasource.PixabayDataSource
+import com.tving.core.data.remote.datasource.PixabayDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

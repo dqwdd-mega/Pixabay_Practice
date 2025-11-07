@@ -1,4 +1,4 @@
-package com.tving.core.domain.model.video
+package com.tving.core.domain.model.pixabay
 
 data class VideoSearch(
     val id: Int,

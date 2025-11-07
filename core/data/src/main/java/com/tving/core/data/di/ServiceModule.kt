@@ -1,6 +1,6 @@
 package com.tving.core.data.di
 
-import com.tving.core.data.service.PixabayService
+import com.tving.core.data.remote.service.PixabayService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

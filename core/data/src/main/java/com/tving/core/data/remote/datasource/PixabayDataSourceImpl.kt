@@ -1,9 +1,9 @@
-package com.tving.core.data.remote
+package com.tving.core.data.remote.datasource
 
 import com.tving.core.data.model.BaseResponse
-import com.tving.core.data.model.image.ImageSearchResponse
-import com.tving.core.data.model.video.VideoSearchResponse
-import com.tving.core.data.service.PixabayService
+import com.tving.core.data.model.pixabay.ImageSearchResponse
+import com.tving.core.data.model.pixabay.VideoSearchResponse
+import com.tving.core.data.remote.service.PixabayService
 import javax.inject.Inject
 
 class PixabayDataSourceImpl @Inject constructor(

@@ -1,7 +1,7 @@
 package com.tving.core.domain.usecase
 
 import com.tving.core.domain.model.BaseResult
-import com.tving.core.domain.model.image.ImageSearch
+import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.repository.PixabayRepository
 import javax.inject.Inject
 

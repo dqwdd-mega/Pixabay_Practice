@@ -1,10 +1,10 @@
-package com.tving.core.data.repository
+package com.tving.core.data.remote.repository
 
 import com.tving.core.data.mapper.toDomain
-import com.tving.core.data.remote.PixabayDataSource
+import com.tving.core.data.remote.datasource.PixabayDataSource
 import com.tving.core.domain.model.BaseResult
-import com.tving.core.domain.model.image.ImageSearch
-import com.tving.core.domain.model.video.VideoSearch
+import com.tving.core.domain.model.pixabay.ImageSearch
+import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.core.domain.repository.PixabayRepository
 import javax.inject.Inject
 

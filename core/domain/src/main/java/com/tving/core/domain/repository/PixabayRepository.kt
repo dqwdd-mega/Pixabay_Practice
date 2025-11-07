@@ -1,8 +1,8 @@
 package com.tving.core.domain.repository
 
 import com.tving.core.domain.model.BaseResult
-import com.tving.core.domain.model.image.ImageSearch
-import com.tving.core.domain.model.video.VideoSearch
+import com.tving.core.domain.model.pixabay.ImageSearch
+import com.tving.core.domain.model.pixabay.VideoSearch
 
 interface PixabayRepository {
     /**

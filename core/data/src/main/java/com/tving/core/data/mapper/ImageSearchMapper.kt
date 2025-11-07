@@ -1,9 +1,9 @@
 package com.tving.core.data.mapper
 
 import com.tving.core.data.model.BaseResponse
-import com.tving.core.data.model.image.ImageSearchResponse
+import com.tving.core.data.model.pixabay.ImageSearchResponse
 import com.tving.core.domain.model.BaseResult
-import com.tving.core.domain.model.image.ImageSearch
+import com.tving.core.domain.model.pixabay.ImageSearch
 
 fun BaseResponse<List<ImageSearchResponse>>.toDomain(): BaseResult<List<ImageSearch>> {
     return BaseResult(

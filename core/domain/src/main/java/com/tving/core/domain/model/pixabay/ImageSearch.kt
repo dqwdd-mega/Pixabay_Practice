@@ -1,4 +1,4 @@
-package com.tving.core.domain.model.image
+package com.tving.core.domain.model.pixabay
 
 data class ImageSearch(
     val id: Int,
