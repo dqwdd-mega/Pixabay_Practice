@@ -14,7 +14,12 @@ interface PixabayRepository {
     /**
      * 이미지 검색
      * @param query 검색 쿼리
-     * @param imageType 이미지 타입 (all, photo, illustration, vector)
+     * @param page 페이지 번호
+     * @param perPage 페이지당 결과 수
      */
-    suspend fun searchImage(query: String, imageType: String): BaseResult<List<ImageSearch>>
+    suspend fun searchImage(
+        query: String,
+        page: Int = 1,
+        perPage: Int = 20
+    ): BaseResult<List<ImageSearch>>
 }

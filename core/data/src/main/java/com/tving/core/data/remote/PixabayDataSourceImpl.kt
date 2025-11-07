@@ -17,8 +17,13 @@ class PixabayDataSourceImpl @Inject constructor(
 
     override suspend fun searchImage(
         query: String,
-        imageType: String
+        page: Int,
+        perPage: Int
     ): BaseResponse<List<ImageSearchResponse>> {
-        return service.searchImage(q = query, imageType = imageType)
+        return service.searchImage(
+            q = query,
+            page = page,
+            perPage = perPage
+        )
     }
 }

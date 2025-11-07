@@ -10,8 +10,9 @@ class GetSearchImageUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         query: String,
-        imageType: String = "all"
+        page: Int = 1,
+        perPage: Int = 20
     ): BaseResult<List<ImageSearch>> {
-        return repository.searchImage(query, imageType)
+        return repository.searchImage(query, page, perPage)
     }
 }
