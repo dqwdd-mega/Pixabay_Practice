@@ -102,7 +102,10 @@ fun HomeScreen(
 
             when (state.searchState) {
                 SearchState.Idle -> SearchIdleCard(modifier = Modifier)
-                SearchState.Success -> SearchSuccessCard(modifier = Modifier)
+                SearchState.Success -> SearchSuccessCard(
+                    modifier = Modifier,
+                    state = state
+                )
                 SearchState.Empty -> SearchIdleCard(modifier = Modifier)
                 SearchState.Fail -> SearchIdleCard(modifier = Modifier)
             }
