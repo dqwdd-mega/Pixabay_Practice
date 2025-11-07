@@ -43,11 +43,6 @@ class HomeViewModel @Inject constructor(
 
                 val hasResults = videoResult.data.isNotEmpty() || imageResult.data.isNotEmpty()
 
-                Log.e("tetest", "tetest11, searchText === $searchText")
-                Log.e("tetest", "tetest22, hasResults === $hasResults")
-                Log.e("tetest", "tetest33, videoResult.data.isNotEmpty() === ${videoResult.data.isNotEmpty()}")
-                Log.e("tetest", "tetest44, imageResult.data.isNotEmpty() === ${imageResult.data.isNotEmpty()}")
-
                 if (hasResults) {
                     updateSearchState(SearchState.Success)
                     handleVideoResults(videoResult.data)
@@ -59,7 +54,6 @@ class HomeViewModel @Inject constructor(
                 Log.e("tetest", "tetest, Exception === ${e.message}", e)
                 updateSearchState(SearchState.Fail)
             } finally {
-                Log.e("tetest", "tetest, SearchState === ${state.value.searchState}")
                 updateLoading(false)
             }
         }
@@ -97,6 +91,9 @@ class HomeViewModel @Inject constructor(
      * 비디오 결과 처리
      */
     private fun handleVideoResults(videos: List<VideoSearch>) {
+        if (videos.isNotEmpty()) {
+            reduce { copy(firstVideo = videos.first()) }
+        }
     }
 
     /**
