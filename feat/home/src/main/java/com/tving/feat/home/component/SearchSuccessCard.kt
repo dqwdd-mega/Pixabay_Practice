@@ -86,6 +86,10 @@ fun SearchSuccessCard(
                     color = Black,
                     fontSize = 24.sp
                 )
+                Text(
+                    text = stringResource(R.string.text_image_by_pixabay),
+                    color = Black
+                )
                 Spacer(modifier = Modifier.height(15.dp))
             }
         }
