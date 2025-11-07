@@ -96,7 +96,7 @@ fun VideoComponent(
                     .align(Alignment.BottomEnd)
                     .clickable { onFavoriteClick() },
                 painter = if (favoriteOnOff) {
-                    painterResource(id = R.drawable.ic_check_circle)
+                    painterResource(id = R.drawable.ic_heart_empty)
                 } else {
                     painterResource(id = R.drawable.ic_heart)
                 },

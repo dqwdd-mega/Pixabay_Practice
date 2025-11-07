@@ -226,9 +226,9 @@ fun SearchImageItem(
                 .align(Alignment.TopEnd)
                 .clickable { onClickFavorite() },
             painter = if (isFavorite) {
-                painterResource(id = com.tving.core.designsystem.R.drawable.ic_check_circle)
+                painterResource(id = com.tving.core.designsystem.R.drawable.ic_heart)
             } else {
-                painterResource(id = com.tving.core.designsystem.R.drawable.ic_heart_circle)
+                painterResource(id = com.tving.core.designsystem.R.drawable.ic_heart_empty)
             },
             contentDescription = "favorite",
         )
