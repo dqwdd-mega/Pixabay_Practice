@@ -46,7 +46,9 @@ fun SearchSuccessCard(
     totalImageHits: Int,
     searchImagePagingLoading: Boolean,
     firstVideo: com.tving.core.domain.model.pixabay.VideoSearch?,
+    videoFavorite: Boolean = false,
     onRequestMore: () -> Unit = {},
+    onClickOnOffVideoFavorite: () -> Unit = {},
 ) {
     val configuration = LocalConfiguration.current
     val isLand = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -98,7 +100,11 @@ fun SearchSuccessCard(
 
         // video
         item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(gridColumns) }) {
-            FeaturedVideoSection(firstVideo = firstVideo)
+            FeaturedVideoSection(
+                firstVideo = firstVideo,
+                videoFavorite = videoFavorite,
+                onOnOffVideoFavorite = onClickOnOffVideoFavorite
+            )
         }
 
         // image
@@ -124,7 +130,9 @@ fun SearchSuccessCard(
 @Composable
 fun FeaturedVideoSection(
     modifier: Modifier = Modifier,
-    firstVideo: com.tving.core.domain.model.pixabay.VideoSearch?
+    firstVideo: com.tving.core.domain.model.pixabay.VideoSearch?,
+    videoFavorite: Boolean = false,
+    onOnOffVideoFavorite: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
         Text(
@@ -141,8 +149,8 @@ fun FeaturedVideoSection(
                     .aspectRatio(16f / 9f),
                 videoUrl = video.videoUrl,
                 thumbnailUrl = video.thumbnailUrl,
-                favoriteOnOff = true,
-                showBottomFavoriteState = true
+                favoriteOnOff = videoFavorite,
+                onFavoriteClick = onOnOffVideoFavorite
             )
         } ?: run {
             Box(
@@ -192,8 +200,7 @@ fun SearchImageItem(
             .background(color = GreyD9D9D9)
             .border(
                 width = 1.dp,
-                color = Black,
-                shape = RoundedCornerShape(8.dp)
+                color = Black
             ),
     ) {
         AsyncImage(
@@ -217,6 +224,7 @@ fun PreviewSearchSuccessCard() {
         images = emptyList(),
         totalImageHits = 0,
         searchImagePagingLoading = false,
-        firstVideo = null
+        firstVideo = null,
+        videoFavorite = false,
     )
 }

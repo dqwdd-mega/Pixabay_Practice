@@ -50,6 +50,7 @@ fun HomeRoute(
         onClickSearchTextClear = { viewModel.updateSearchText("") },
         searchContent = { viewModel.searchContent() },
         onLoadMoreImages = { viewModel.searchImages() },
+        onClickOnOffVideoFavorite = { viewModel.onOffVideoFavorite() },
     )
 }
 
@@ -60,6 +61,7 @@ fun HomeScreen(
     onClickSearchTextClear: () -> Unit,
     searchContent: () -> Unit,
     onLoadMoreImages: () -> Unit = {},
+    onClickOnOffVideoFavorite: () -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -130,7 +132,9 @@ fun HomeScreen(
                     totalImageHits = state.totalImageHits,
                     searchImagePagingLoading = state.searchImagePagingLoading,
                     firstVideo = state.firstVideo,
-                    onRequestMore = onLoadMoreImages
+                    videoFavorite = state.isFirstVideoFavorite,
+                    onRequestMore = onLoadMoreImages,
+                    onClickOnOffVideoFavorite = onClickOnOffVideoFavorite,
                 )
                 SearchState.Empty -> SearchEmptyCard(modifier = Modifier)
                 SearchState.Fail -> SearchFailCard(modifier = Modifier)
@@ -157,5 +161,6 @@ fun PreviewHomeScreen() {
         onClickSearchTextClear = {},
         searchContent = {},
         onLoadMoreImages = {},
+        onClickOnOffVideoFavorite = {},
     )
 }

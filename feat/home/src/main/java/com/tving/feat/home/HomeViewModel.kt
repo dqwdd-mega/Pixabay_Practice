@@ -5,11 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.tving.core.common.base.BaseViewModel
 import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
+import com.tving.core.domain.usecase.AddFavoriteVideoUseCase
+import com.tving.core.domain.usecase.GetFavoriteVideosUseCase
 import com.tving.core.domain.usecase.GetSearchImageUseCase
 import com.tving.core.domain.usecase.GetSearchVideoUseCase
+import com.tving.core.domain.usecase.IsFavoriteVideoUseCase
+import com.tving.core.domain.usecase.RemoveFavoriteVideoUseCase
 import com.tving.feat.home.model.SearchState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,14 +23,31 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getSearchVideoUseCase: GetSearchVideoUseCase,
     private val getSearchImageUseCase: GetSearchImageUseCase,
+    private val getFavoriteVideosUseCase: GetFavoriteVideosUseCase,
+    private val isFavoriteVideoUseCase: IsFavoriteVideoUseCase,
+    private val addFavoriteVideoUseCase: AddFavoriteVideoUseCase,
+    private val removeFavoriteVideoUseCase: RemoveFavoriteVideoUseCase,
 ) : BaseViewModel<HomeContract.HomeState, HomeContract.Event, HomeContract.SideEffect>() {
 
     override val _state = MutableStateFlow(HomeContract.HomeState())
 
+    init {
+        getFavoriteVideos()
+    }
+
     override suspend fun handleEvent(event: HomeContract.Event) {
         when (event) {
             is HomeContract.Event.ClickSearch -> searchContent()
+            is HomeContract.Event.ClickOnOffVideoFavorite -> onOffVideoFavorite()
         }
+    }
+
+    private fun getFavoriteVideos() {
+        getFavoriteVideosUseCase()
+            .onEach { favoriteVideos ->
+                reduce { copy(favoriteVideos = favoriteVideos) }
+            }
+            .launchIn(viewModelScope)
     }
 
     /**
@@ -151,5 +174,17 @@ class HomeViewModel @Inject constructor(
 
     private fun updateTotalImageHits(totalHits: Int) {
         reduce { copy(totalImageHits = totalHits) }
+    }
+
+    fun onOffVideoFavorite() {
+        val video = state.value.firstVideo ?: return
+        
+        viewModelScope.launch {
+            if (isFavoriteVideoUseCase(video.id)) {
+                removeFavoriteVideoUseCase(video.id)
+            } else {
+                addFavoriteVideoUseCase(video)
+            }
+        }
     }
 }

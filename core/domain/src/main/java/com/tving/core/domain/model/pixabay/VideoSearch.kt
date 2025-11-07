@@ -18,14 +18,12 @@ data class VideoSearch(
 ) {
     val videoUrl: String
         get() {
-            val bestVideo = videos?.small // small 선택
-            return bestVideo?.url ?: ""
+            return videos?.small?.url ?: "" // small 선택
         }
-    
+
     val thumbnailUrl: String
         get() {
-            val bestVideo = videos?.medium ?: videos?.small ?: videos?.tiny ?: videos?.large
-            return bestVideo?.thumbnail ?: ""
+            return videos?.small?.thumbnail ?: "" // small 선택
         }
 }
 

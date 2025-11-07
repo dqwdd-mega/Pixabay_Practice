@@ -18,10 +18,17 @@ object HomeContract {
         val searchImagePagingLoading: Boolean = false,
         val totalImageHits: Int = 0,
         val perPage: Int = 20,
-    ) : BaseContract.UiState
+        val favoriteVideos: List<VideoSearch> = emptyList(),
+    ) : BaseContract.UiState {
+        val isFirstVideoFavorite: Boolean
+            get() = firstVideo?.let { video -> 
+                favoriteVideos.any { it.id == video.id }
+            } ?: false
+    }
 
     sealed interface Event : BaseContract.Event {
         data object ClickSearch : Event
+        data object ClickOnOffVideoFavorite : Event
     }
 
     sealed interface SideEffect : BaseContract.SideEffect {

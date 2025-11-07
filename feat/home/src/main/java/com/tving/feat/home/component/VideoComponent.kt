@@ -34,7 +34,7 @@ fun VideoComponent(
     videoUrl: String,
     thumbnailUrl: String,
     favoriteOnOff: Boolean,
-    showBottomFavoriteState: Boolean = false
+    onFavoriteClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     var isPlaying by remember { mutableStateOf(false) }
@@ -89,6 +89,19 @@ fun VideoComponent(
                     .align(Alignment.Center)
                     .size(48.dp)
             )
+
+            Image(
+                modifier = Modifier
+                    .padding(bottom = 10.dp, end = 10.dp)
+                    .align(Alignment.BottomEnd)
+                    .clickable { onFavoriteClick() },
+                painter = if (favoriteOnOff) {
+                    painterResource(id = R.drawable.ic_check_circle)
+                } else {
+                    painterResource(id = R.drawable.ic_heart)
+                },
+                contentDescription = "favorite",
+            )
         } else {
             // 비디오 재생
             AndroidView(
@@ -101,16 +114,6 @@ fun VideoComponent(
                 modifier = Modifier.fillMaxSize()
             )
         }
-
-        if (showBottomFavoriteState && favoriteOnOff && isPlaying.not()) {
-            Image(
-                modifier = Modifier
-                    .padding(bottom = 10.dp, end = 10.dp)
-                    .align(Alignment.BottomEnd),
-                painter = painterResource(id = R.drawable.ic_heart),
-                contentDescription = "favorite on",
-            )
-        }
     }
 }
 
@@ -120,7 +123,6 @@ fun PreviewVideoThumbnailComponent() {
     VideoComponent(
         videoUrl = "https://...mp4",
         thumbnailUrl = "https://...jpg",
-        favoriteOnOff = true,
-        showBottomFavoriteState = true
+        favoriteOnOff = true
     )
 }
