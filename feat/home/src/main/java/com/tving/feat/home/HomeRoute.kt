@@ -2,6 +2,7 @@ package com.tving.feat.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,12 +12,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,14 +45,29 @@ fun HomeRoute(
     HomeScreen(
         state = state,
         onChangeSearchText = { viewModel.updateSearchText(it) },
+        onClickSearchTextClear = { viewModel.updateSearchText("") },
+        searchContent = { viewModel.searchContent() },
     )
 }
 
 @Composable
 fun HomeScreen(
     state: HomeContract.HomeState,
-    onChangeSearchText: (String) -> Unit
+    onChangeSearchText: (String) -> Unit,
+    onClickSearchTextClear: () -> Unit,
+    searchContent: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+    
+    if (state.loading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -64,6 +83,9 @@ fun HomeScreen(
                 value = state.searchText,
                 onValueChange = onChangeSearchText,
                 placeholderText = stringResource(com.tving.feat.home.R.string.text_for_search_placeholder),
+                keyboardActions = KeyboardActions(
+                    onDone = { searchContent() }
+                ),
                 hasLeftContent = true,
                 hasRightContent = state.showSearchRightContent,
                 leftContent = {
@@ -76,7 +98,8 @@ fun HomeScreen(
                 rightContent = {
                     Image(
                         modifier = Modifier
-                            .padding(end = 20.dp),
+                            .padding(end = 20.dp)
+                            .clickable { onClickSearchTextClear() },
                         painter = painterResource(id = R.drawable.ic_close_circle),
                         contentDescription = "buttonClose",
                     )
@@ -91,11 +114,12 @@ fun HomeScreen(
                             .padding(
                                 horizontal = 10.dp,
                                 vertical = 15.dp
-                            ),
+                            )
+                            .clickable { focusManager.clearFocus() },
                         text = "Cancel",
                         color = Black,
                     )
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -118,6 +142,8 @@ fun HomeScreen(
 fun PreviewHomeScreen() {
     HomeScreen(
         state = HomeContract.HomeState(),
-        onChangeSearchText = {}
+        onChangeSearchText = {},
+        onClickSearchTextClear = {},
+        searchContent = {},
     )
 }

@@ -4,11 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,12 +49,11 @@ fun TvingInputTextField(
     placeholderText: String = "입력해 주세요",
     placeholderTextColor: Color = Black212121,
     textAlign: TextAlign = TextAlign.Start,
-    textColor: Color = Black,
     singleLine: Boolean = true,
     strokeColor: Color = Black212121,
     background: Color = White,
     shape: Shape = RoundedCornerShape(8.dp),
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -71,7 +73,7 @@ fun TvingInputTextField(
         interactionSource = interactionSource,
         visualTransformation = visualTransformation,
         singleLine = singleLine,
-        decorationBox = {
+        decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,20 +82,26 @@ fun TvingInputTextField(
                     .height(IntrinsicSize.Max),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val isFocused = interactionSource.collectIsFocusedAsState().value
+
                 if (hasLeftContent) {
                     leftContent()
                 }
-
-                Text(
+                Box(
                     modifier = Modifier
-                        .padding(
-                            horizontal = 10.dp,
-                            vertical = 15.dp
-                        ),
-                    text = if (isValueEmpty) placeholderText else value,
-                    color = if (isValueEmpty) placeholderTextColor else textColor,
-                    textAlign = textAlign
-                )
+                        .padding(vertical = 15.dp, horizontal = 10.dp)
+                        .defaultMinSize(minHeight = 24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (isValueEmpty && !isFocused) {
+                        Text(
+                            text = placeholderText,
+                            color = placeholderTextColor,
+                            textAlign = textAlign
+                        )
+                    }
+                    innerTextField()
+                }
 
                 if (hasRightContent) {
                     Spacer(modifier = Modifier.weight(1f))
@@ -109,9 +117,6 @@ fun TvingInputTextField(
 private fun PreviewTvingInputTextField() {
     var text by remember { mutableStateOf("") }
     TvingInputTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp),
         value = text,
         onValueChange = { newText ->
             text = newText
@@ -124,9 +129,6 @@ private fun PreviewTvingInputTextField() {
 private fun PreviewSearchInputTextField() {
     var text by remember { mutableStateOf("") }
     TvingInputTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp),
         value = text,
         onValueChange = { newText ->
             text = newText
@@ -156,11 +158,7 @@ private fun PreviewSearchInputTextField() {
                     .background(color = Black212121)
             )
             Text(
-                modifier = Modifier
-                    .padding(
-                        horizontal = 10.dp,
-                        vertical = 15.dp
-                    ),
+                modifier = Modifier.padding(horizontal = 10.dp),
                 text = "Cancel",
                 color = Black,
             )

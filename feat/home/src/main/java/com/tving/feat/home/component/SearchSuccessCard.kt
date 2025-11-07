@@ -44,6 +44,11 @@ fun SearchSuccessCard(
             favoriteOnOff = true,
             showBottomFavoriteState = true
         )
+
+        ThumbnailComponent(
+            favoriteOnOff = true,
+            showBottomFavoriteState = true
+        )
     }
 }
 
