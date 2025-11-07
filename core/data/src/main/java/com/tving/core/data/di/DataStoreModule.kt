@@ -25,10 +25,4 @@ object DataStoreModule {
     ): DataStore<Preferences> {
         return context.dataStore
     }
-
-    @Provides
-    @Singleton
-    fun provideGson(): Gson {
-        return Gson()
-    }
 }
