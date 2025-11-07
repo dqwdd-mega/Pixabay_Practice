@@ -1,8 +1,12 @@
 package com.tving.core.data.mapper
 
 import com.tving.core.data.model.BaseResponse
+import com.tving.core.data.model.pixabay.VideoInfo
+import com.tving.core.data.model.pixabay.VideoQuality
 import com.tving.core.data.model.pixabay.VideoSearchResponse
 import com.tving.core.domain.model.BaseResult
+import com.tving.core.domain.model.pixabay.VideoInfoDomain
+import com.tving.core.domain.model.pixabay.VideoQualityDomain
 import com.tving.core.domain.model.pixabay.VideoSearch
 
 fun BaseResponse<List<VideoSearchResponse>>.toDomain(): BaseResult<List<VideoSearch>> {
@@ -14,11 +18,6 @@ fun BaseResponse<List<VideoSearchResponse>>.toDomain(): BaseResult<List<VideoSea
 }
 
 fun VideoSearchResponse.toDomain(): VideoSearch {
-    // 가장 적합한 품질 선택 (medium > small > tiny > large 순)
-    val bestVideo = videos?.medium ?: videos?.small ?: videos?.tiny ?: videos?.large
-    val videoUrl = bestVideo?.url ?: ""
-    val thumbnailUrl = bestVideo?.thumbnail ?: ""
-
     return VideoSearch(
         id = id ?: 0,
         pageURL = pageURL ?: "",
@@ -26,8 +25,7 @@ fun VideoSearchResponse.toDomain(): VideoSearch {
         tags = tags ?: "",
         duration = duration ?: 0,
         pictureId = pictureId ?: "",
-        videoUrl = videoUrl,
-        thumbnailUrl = thumbnailUrl,
+        videos = videos?.toDomain(),
         views = views ?: 0,
         downloads = downloads ?: 0,
         likes = likes ?: 0,
@@ -35,5 +33,24 @@ fun VideoSearchResponse.toDomain(): VideoSearch {
         userId = userId ?: 0,
         user = user ?: "",
         userImageURL = userImageURL ?: ""
+    )
+}
+
+fun VideoQuality.toDomain(): VideoQualityDomain {
+    return VideoQualityDomain(
+        large = large?.toDomain(),
+        medium = medium?.toDomain(),
+        small = small?.toDomain(),
+        tiny = tiny?.toDomain()
+    )
+}
+
+fun VideoInfo.toDomain(): VideoInfoDomain {
+    return VideoInfoDomain(
+        url = url,
+        width = width,
+        height = height,
+        size = size,
+        thumbnail = thumbnail
     )
 }

@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,10 +33,13 @@ fun SearchSuccessCard(
     modifier: Modifier = Modifier,
     state: HomeContract.HomeState,
 ) {
+    val scrollState = rememberScrollState()
+    
     Column(
         modifier = modifier
             .background(color = White)
             .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
         Spacer(modifier = Modifier.height(10.dp))
         Text(
