@@ -1,6 +1,7 @@
 package com.tving.feat.home
 
 import com.tving.core.common.base.BaseContract
+import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.feat.home.model.SearchState
 
@@ -12,6 +13,9 @@ object HomeContract {
         val showSearchRightContent: Boolean = false,
         val searchState: SearchState = SearchState.Idle,
         val firstVideo: VideoSearch? = null,
+        val images: List<ImageSearch> = emptyList(),
+        val currentImagePage: Int = 1,
+        val searchImagePagingLoading: Boolean = false,
     ) : BaseContract.UiState
 
     sealed interface Event : BaseContract.Event {

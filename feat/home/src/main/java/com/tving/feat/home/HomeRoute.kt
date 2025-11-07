@@ -47,6 +47,7 @@ fun HomeRoute(
         onChangeSearchText = { viewModel.updateSearchText(it) },
         onClickSearchTextClear = { viewModel.updateSearchText("") },
         searchContent = { viewModel.searchContent() },
+        onLoadMoreImages = { viewModel.searchImages() },
     )
 }
 
@@ -56,17 +57,9 @@ fun HomeScreen(
     onChangeSearchText: (String) -> Unit,
     onClickSearchTextClear: () -> Unit,
     searchContent: () -> Unit,
+    onLoadMoreImages: () -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
-    
-    if (state.loading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    }
 
     Box(
         modifier = Modifier
@@ -84,7 +77,10 @@ fun HomeScreen(
                 onValueChange = onChangeSearchText,
                 placeholderText = stringResource(com.tving.feat.home.R.string.text_for_search_placeholder),
                 keyboardActions = KeyboardActions(
-                    onDone = { searchContent() }
+                    onDone = {
+                        focusManager.clearFocus()
+                        searchContent()
+                    }
                 ),
                 hasLeftContent = true,
                 hasRightContent = state.showSearchRightContent,
@@ -128,10 +124,20 @@ fun HomeScreen(
                 SearchState.Idle -> SearchIdleCard(modifier = Modifier)
                 SearchState.Success -> SearchSuccessCard(
                     modifier = Modifier,
-                    state = state
+                    state = state,
+                    onLoadMore = onLoadMoreImages
                 )
                 SearchState.Empty -> SearchIdleCard(modifier = Modifier)
                 SearchState.Fail -> SearchIdleCard(modifier = Modifier)
+            }
+        }
+
+        if (state.loading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
         }
     }
@@ -145,5 +151,6 @@ fun PreviewHomeScreen() {
         onChangeSearchText = {},
         onClickSearchTextClear = {},
         searchContent = {},
+        onLoadMoreImages = {},
     )
 }

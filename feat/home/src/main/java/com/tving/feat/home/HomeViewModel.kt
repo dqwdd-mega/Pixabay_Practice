@@ -37,16 +37,17 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updateLoading(true)
+                resetImagePage()
 
                 val videoResult = getSearchVideoUseCase(query = searchText)
-                val imageResult = getSearchImageUseCase(query = searchText)
+                val imageResult = getSearchImageUseCase(query = searchText, page = 1)
 
                 val hasResults = videoResult.data.isNotEmpty() || imageResult.data.isNotEmpty()
 
                 if (hasResults) {
                     updateSearchState(SearchState.Success)
                     handleVideoResults(videoResult.data)
-                    handleImageResults(imageResult.data)
+                    handleImageResults(imageResult.data, isAppend = false)
                 } else {
                     updateSearchState(SearchState.Empty)
                 }
@@ -60,46 +61,52 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * 이미지 검색
+     * 이미지 검색 (페이징 적용)
      */
-    fun searchImages(query: String) {
-        if (query.isEmpty()) return
+    fun searchImages() {
+        val searchText = state.value.searchText
+        if (searchText.isEmpty()) return
+        if (state.value.searchImagePagingLoading) return
 
         viewModelScope.launch {
             try {
-                updateLoading(true)
+                updateSearchImagePagingLoading(true)
+                
+                val nextPage = state.value.currentImagePage + 1
+                val result = getSearchImageUseCase(
+                    query = searchText, 
+                    page = nextPage
+                )
 
-                val result = getSearchImageUseCase(query = query)
-
-                if (result.data.isEmpty()) {
-                    updateSearchState(SearchState.Empty)
-                } else {
-                    updateSearchState(SearchState.Success)
-                    handleImageResults(result.data)
+                if (result.data.isNotEmpty()) {
+                    handleImageResults(result.data, isAppend = true)
+                    reduce { copy(currentImagePage = nextPage) }
                 }
 
             } catch (e: Exception) {
-                updateSearchState(SearchState.Fail)
+                Log.e("tetest", "tetest, loadMore Exception === ${e.message}", e)
                 e.printStackTrace()
             } finally {
-                updateLoading(false)
+                updateSearchImagePagingLoading(false)
             }
         }
     }
 
-    /**
-     * 비디오 결과 처리
-     */
     private fun handleVideoResults(videos: List<VideoSearch>) {
         if (videos.isNotEmpty()) {
             reduce { copy(firstVideo = videos.first()) }
         }
     }
 
-    /**
-     * 이미지 결과 처리
-     */
-    private fun handleImageResults(images: List<ImageSearch>) {
+    private fun handleImageResults(images: List<ImageSearch>, isAppend: Boolean = false) {
+        if (isAppend) {
+            // 기존 리스트에 추가
+            val currentImages = state.value.images
+            reduce { copy(images = currentImages + images) }
+        } else {
+            // 새로운 리스트로 교체
+            reduce { copy(images = images) }
+        }
     }
 
     private fun updateLoading(loading: Boolean) {
@@ -123,5 +130,16 @@ class HomeViewModel @Inject constructor(
 
     private fun updateShowSearchRightContent(show: Boolean) {
         reduce { copy(showSearchRightContent = show) }
+    }
+
+    /**
+     * 검색 시작 시 페이지 리셋
+     */
+    private fun resetImagePage() {
+        reduce { copy(currentImagePage = 1, images = emptyList()) }
+    }
+
+    private fun updateSearchImagePagingLoading(loading: Boolean) {
+        reduce { copy(searchImagePagingLoading = loading) }
     }
 }
