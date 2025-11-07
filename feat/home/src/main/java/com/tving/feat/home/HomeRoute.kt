@@ -31,6 +31,8 @@ import com.tving.core.designsystem.component.TvingInputTextField
 import com.tving.core.designsystem.theme.ColorTokens.Black
 import com.tving.core.designsystem.theme.ColorTokens.Black212121
 import com.tving.core.designsystem.theme.ColorTokens.White
+import com.tving.feat.home.component.SearchEmptyCard
+import com.tving.feat.home.component.SearchFailCard
 import com.tving.feat.home.component.SearchIdleCard
 import com.tving.feat.home.component.SearchSuccessCard
 import com.tving.feat.home.model.SearchState
@@ -124,11 +126,14 @@ fun HomeScreen(
                 SearchState.Idle -> SearchIdleCard(modifier = Modifier)
                 SearchState.Success -> SearchSuccessCard(
                     modifier = Modifier,
-                    state = state,
+                    images = state.images,
+                    totalImageHits = state.totalImageHits,
+                    searchImagePagingLoading = state.searchImagePagingLoading,
+                    firstVideo = state.firstVideo,
                     onRequestMore = onLoadMoreImages
                 )
-                SearchState.Empty -> SearchIdleCard(modifier = Modifier)
-                SearchState.Fail -> SearchIdleCard(modifier = Modifier)
+                SearchState.Empty -> SearchEmptyCard(modifier = Modifier)
+                SearchState.Fail -> SearchFailCard(modifier = Modifier)
             }
         }
 

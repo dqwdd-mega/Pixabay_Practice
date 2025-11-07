@@ -37,13 +37,15 @@ import coil3.compose.AsyncImage
 import com.tving.core.designsystem.theme.ColorTokens.Black
 import com.tving.core.designsystem.theme.ColorTokens.GreyD9D9D9
 import com.tving.core.designsystem.theme.ColorTokens.White
-import com.tving.feat.home.HomeContract
 import com.tving.feat.home.R
 
 @Composable
 fun SearchSuccessCard(
     modifier: Modifier = Modifier,
-    state: HomeContract.HomeState,
+    images: List<com.tving.core.domain.model.pixabay.ImageSearch>,
+    totalImageHits: Int,
+    searchImagePagingLoading: Boolean,
+    firstVideo: com.tving.core.domain.model.pixabay.VideoSearch?,
     onRequestMore: () -> Unit = {},
 ) {
     val configuration = LocalConfiguration.current
@@ -55,13 +57,13 @@ fun SearchSuccessCard(
         derivedStateOf {
             val lastVisibleItem = gridState.layoutInfo.visibleItemsInfo.lastOrNull()
             val totalItems = gridState.layoutInfo.totalItemsCount
-            val hasMoreImages = state.images.size < state.totalImageHits
-            lastVisibleItem != null && lastVisibleItem.index >= totalItems - 3 && !state.searchImagePagingLoading && hasMoreImages
+            val hasMoreImages = images.size < totalImageHits
+            lastVisibleItem != null && lastVisibleItem.index >= totalItems - 3 && !searchImagePagingLoading && hasMoreImages
         }
     }
 
     LaunchedEffect(requestMore) {
-        if (requestMore && state.images.isNotEmpty()) {
+        if (requestMore && images.isNotEmpty()) {
             onRequestMore()
         }
     }
@@ -94,72 +96,17 @@ fun SearchSuccessCard(
             }
         }
 
+        // video
         item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(gridColumns) }) {
-            Column {
-                Text(
-                    text = stringResource(R.string.text_featured_video),
-                    color = Black,
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-
-                state.firstVideo?.let { video ->
-                    VideoComponent(
-                        modifier = Modifier
-                            .padding(horizontal = 10.dp)
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f),
-                        videoUrl = video.videoUrl,
-                        thumbnailUrl = video.thumbnailUrl,
-                        favoriteOnOff = true,
-                        showBottomFavoriteState = true
-                    )
-                } ?: run {
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 10.dp)
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f)
-                            .background(color = GreyD9D9D9)
-                            .border(
-                                width = 1.dp,
-                                color = Black,
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                    ) {
-                        Text(
-                            modifier = Modifier.align(alignment = Alignment.Center),
-                            text = stringResource(R.string.text_video_is_gone),
-                            color = Black,
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-            }
+            FeaturedVideoSection(firstVideo = firstVideo)
         }
 
-        items(state.images) { image ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .background(color = GreyD9D9D9, shape = RoundedCornerShape(8.dp))
-                    .border(
-                        width = 1.dp,
-                        color = Black,
-                        shape = RoundedCornerShape(8.dp)
-                    ),
-            ) {
-                AsyncImage(
-                    model = image.previewURL,
-                    contentDescription = image.tags,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            }
+        // image
+        items(images) { image ->
+            SearchImageItem(image = image)
         }
 
-        if (state.searchImagePagingLoading) {
+        if (searchImagePagingLoading) {
             item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(gridColumns) }) {
                 Box(
                     modifier = Modifier
@@ -175,6 +122,90 @@ fun SearchSuccessCard(
 }
 
 @Composable
+fun FeaturedVideoSection(
+    modifier: Modifier = Modifier,
+    firstVideo: com.tving.core.domain.model.pixabay.VideoSearch?
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.text_featured_video),
+            color = Black,
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        firstVideo?.let { video ->
+            VideoComponent(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f),
+                videoUrl = video.videoUrl,
+                thumbnailUrl = video.thumbnailUrl,
+                favoriteOnOff = true,
+                showBottomFavoriteState = true
+            )
+        } ?: run {
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .background(color = GreyD9D9D9)
+                    .border(
+                        width = 1.dp,
+                        color = Black,
+                        shape = RoundedCornerShape(8.dp)
+                    ),
+            ) {
+                Text(
+                    modifier = Modifier.align(alignment = Alignment.Center),
+                    text = stringResource(R.string.text_video_is_gone),
+                    color = Black,
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
+@Composable
+@Preview(
+    showBackground = true,
+    apiLevel = 35,
+    showSystemUi = false,
+    backgroundColor = 0xFFFFFFFF
+)
+fun PreviewFeaturedVideoSection() {
+    FeaturedVideoSection(firstVideo = null)
+}
+
+@Composable
+fun SearchImageItem(
+    modifier: Modifier = Modifier,
+    image: com.tving.core.domain.model.pixabay.ImageSearch
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .background(color = GreyD9D9D9)
+            .border(
+                width = 1.dp,
+                color = Black,
+                shape = RoundedCornerShape(8.dp)
+            ),
+    ) {
+        AsyncImage(
+            model = image.previewURL,
+            contentDescription = image.tags,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+
+@Composable
 @Preview(
     showBackground = true,
     apiLevel = 35,
@@ -183,6 +214,9 @@ fun SearchSuccessCard(
 )
 fun PreviewSearchSuccessCard() {
     SearchSuccessCard(
-        state = HomeContract.HomeState()
+        images = emptyList(),
+        totalImageHits = 0,
+        searchImagePagingLoading = false,
+        firstVideo = null
     )
 }
