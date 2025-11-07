@@ -1,6 +1,7 @@
 package com.tving.feat.home
 
 import com.tving.core.common.base.BaseContract
+import com.tving.feat.home.model.SearchState
 
 object HomeContract {
 
@@ -8,6 +9,7 @@ object HomeContract {
         val loading: Boolean = false,
         val searchText: String = "",
         val showSearchRightContent: Boolean = false,
+        val searchState: SearchState = SearchState.Idle,
     ) : BaseContract.UiState
 
     sealed interface Event : BaseContract.Event {

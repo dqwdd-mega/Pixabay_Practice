@@ -1,3 +1,6 @@
 <resources>
     <string name="text_for_search">Search for videos and images</string>
+    <string name="text_for_search_placeholder">Search videos and images...</string>
+    <string name="text_search_results">Search Results</string>
+    <string name="text_featured_video">Featured Video</string>
 </resources>

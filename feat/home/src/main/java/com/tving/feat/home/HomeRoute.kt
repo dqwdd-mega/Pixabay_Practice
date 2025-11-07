@@ -4,17 +4,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,6 +27,9 @@ import com.tving.core.designsystem.component.TvingInputTextField
 import com.tving.core.designsystem.theme.ColorTokens.Black
 import com.tving.core.designsystem.theme.ColorTokens.Black212121
 import com.tving.core.designsystem.theme.ColorTokens.White
+import com.tving.feat.home.component.SearchIdleCard
+import com.tving.feat.home.component.SearchSuccessCard
+import com.tving.feat.home.model.SearchState
 
 @Composable
 fun HomeRoute(
@@ -46,15 +53,17 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = White)
+            .padding(15.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TvingInputTextField(
-                modifier = Modifier.padding(15.dp).fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 value = state.searchText,
                 onValueChange = onChangeSearchText,
-                placeholderText = "Search videos and images...",
+                placeholderText = stringResource(com.tving.feat.home.R.string.text_for_search_placeholder),
                 hasLeftContent = true,
                 hasRightContent = state.showSearchRightContent,
                 leftContent = {
@@ -88,6 +97,15 @@ fun HomeScreen(
                     )
                 }
             )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            when (state.searchState) {
+                SearchState.Idle -> SearchIdleCard(modifier = Modifier)
+                SearchState.Success -> SearchSuccessCard(modifier = Modifier)
+                SearchState.Empty -> SearchIdleCard(modifier = Modifier)
+                SearchState.Fail -> SearchIdleCard(modifier = Modifier)
+            }
         }
     }
 }
