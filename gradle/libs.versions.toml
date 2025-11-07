@@ -15,6 +15,7 @@ appcompat = "1.7.1"
 material = "1.12.0"
 ksp = "2.0.0-1.0.24"
 navigation = "2.7.7"
+jetbrainsKotlinJvm = "2.0.0"
 
 
 [libraries]
@@ -49,3 +50,4 @@ hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
