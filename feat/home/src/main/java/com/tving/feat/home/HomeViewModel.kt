@@ -5,11 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.tving.core.common.base.BaseViewModel
 import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
+import com.tving.core.domain.usecase.AddFavoriteImageUseCase
 import com.tving.core.domain.usecase.AddFavoriteVideoUseCase
+import com.tving.core.domain.usecase.GetFavoriteImagesUseCase
 import com.tving.core.domain.usecase.GetFavoriteVideosUseCase
 import com.tving.core.domain.usecase.GetSearchImageUseCase
 import com.tving.core.domain.usecase.GetSearchVideoUseCase
+import com.tving.core.domain.usecase.IsFavoriteImageUseCase
 import com.tving.core.domain.usecase.IsFavoriteVideoUseCase
+import com.tving.core.domain.usecase.RemoveFavoriteImageUseCase
 import com.tving.core.domain.usecase.RemoveFavoriteVideoUseCase
 import com.tving.feat.home.model.SearchState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,12 +31,17 @@ class HomeViewModel @Inject constructor(
     private val isFavoriteVideoUseCase: IsFavoriteVideoUseCase,
     private val addFavoriteVideoUseCase: AddFavoriteVideoUseCase,
     private val removeFavoriteVideoUseCase: RemoveFavoriteVideoUseCase,
+    private val getFavoriteImagesUseCase: GetFavoriteImagesUseCase,
+    private val isFavoriteImageUseCase: IsFavoriteImageUseCase,
+    private val addFavoriteImageUseCase: AddFavoriteImageUseCase,
+    private val removeFavoriteImageUseCase: RemoveFavoriteImageUseCase,
 ) : BaseViewModel<HomeContract.HomeState, HomeContract.Event, HomeContract.SideEffect>() {
 
     override val _state = MutableStateFlow(HomeContract.HomeState())
 
     init {
         getFavoriteVideos()
+        getFavoriteImages()
     }
 
     override suspend fun handleEvent(event: HomeContract.Event) {
@@ -46,6 +55,14 @@ class HomeViewModel @Inject constructor(
         getFavoriteVideosUseCase()
             .onEach { favoriteVideos ->
                 reduce { copy(favoriteVideos = favoriteVideos) }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun getFavoriteImages() {
+        getFavoriteImagesUseCase()
+            .onEach { favoriteImages ->
+                reduce { copy(favoriteImages = favoriteImages) }
             }
             .launchIn(viewModelScope)
     }
@@ -184,6 +201,16 @@ class HomeViewModel @Inject constructor(
                 removeFavoriteVideoUseCase(video.id)
             } else {
                 addFavoriteVideoUseCase(video)
+            }
+        }
+    }
+
+    fun onOffImageFavorite(image: ImageSearch) {
+        viewModelScope.launch {
+            if (isFavoriteImageUseCase(image.id)) {
+                removeFavoriteImageUseCase(image.id)
+            } else {
+                addFavoriteImageUseCase(image)
             }
         }
     }

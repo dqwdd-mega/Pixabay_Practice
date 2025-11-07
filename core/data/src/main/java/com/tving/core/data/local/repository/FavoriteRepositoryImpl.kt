@@ -1,6 +1,7 @@
 package com.tving.core.data.local.repository
 
 import com.tving.core.data.local.datasource.FavoriteVideoDataSource
+import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.core.domain.repository.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
@@ -24,5 +25,21 @@ class FavoriteRepositoryImpl @Inject constructor(
 
     override suspend fun isFavoriteVideo(videoId: Int): Boolean {
         return dataSource.isFavoriteVideo(videoId)
+    }
+
+    override fun getFavoriteImages(): Flow<List<ImageSearch>> {
+        return dataSource.getFavoriteImages()
+    }
+
+    override suspend fun addFavoriteImage(image: ImageSearch) {
+        dataSource.addFavoriteImage(image)
+    }
+
+    override suspend fun removeFavoriteImage(imageId: Int) {
+        dataSource.removeFavoriteImage(imageId)
+    }
+
+    override suspend fun isFavoriteImage(imageId: Int): Boolean {
+        return dataSource.isFavoriteImage(imageId)
     }
 }

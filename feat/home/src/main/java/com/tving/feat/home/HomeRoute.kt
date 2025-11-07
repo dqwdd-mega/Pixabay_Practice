@@ -51,6 +51,7 @@ fun HomeRoute(
         searchContent = { viewModel.searchContent() },
         onLoadMoreImages = { viewModel.searchImages() },
         onClickOnOffVideoFavorite = { viewModel.onOffVideoFavorite() },
+        onClickOnOffImageFavorite = { image -> viewModel.onOffImageFavorite(image) },
     )
 }
 
@@ -62,6 +63,7 @@ fun HomeScreen(
     searchContent: () -> Unit,
     onLoadMoreImages: () -> Unit = {},
     onClickOnOffVideoFavorite: () -> Unit = {},
+    onClickOnOffImageFavorite: (com.tving.core.domain.model.pixabay.ImageSearch) -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -135,6 +137,8 @@ fun HomeScreen(
                     videoFavorite = state.isFirstVideoFavorite,
                     onRequestMore = onLoadMoreImages,
                     onClickOnOffVideoFavorite = onClickOnOffVideoFavorite,
+                    isImageFavorite = { imageId -> state.isImageFavorite(imageId) },
+                    onClickOnOffImageFavorite = onClickOnOffImageFavorite,
                 )
                 SearchState.Empty -> SearchEmptyCard(modifier = Modifier)
                 SearchState.Fail -> SearchFailCard(modifier = Modifier)

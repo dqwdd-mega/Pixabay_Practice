@@ -1,8 +1,10 @@
 package com.tving.feat.home.component
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +52,8 @@ fun SearchSuccessCard(
     videoFavorite: Boolean = false,
     onRequestMore: () -> Unit = {},
     onClickOnOffVideoFavorite: () -> Unit = {},
+    isImageFavorite: (Int) -> Boolean = { false },
+    onClickOnOffImageFavorite: (com.tving.core.domain.model.pixabay.ImageSearch) -> Unit = {},
 ) {
     val configuration = LocalConfiguration.current
     val isLand = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -109,7 +114,11 @@ fun SearchSuccessCard(
 
         // image
         items(images) { image ->
-            SearchImageItem(image = image)
+            SearchImageItem(
+                image = image,
+                isFavorite = isImageFavorite(image.id),
+                onClickFavorite = { onClickOnOffImageFavorite(image) }
+            )
         }
 
         if (searchImagePagingLoading) {
@@ -191,7 +200,9 @@ fun PreviewFeaturedVideoSection() {
 @Composable
 fun SearchImageItem(
     modifier: Modifier = Modifier,
-    image: com.tving.core.domain.model.pixabay.ImageSearch
+    image: com.tving.core.domain.model.pixabay.ImageSearch,
+    isFavorite: Boolean = false,
+    onClickFavorite: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -208,6 +219,18 @@ fun SearchImageItem(
             contentDescription = image.tags,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
+        )
+        Image(
+            modifier = Modifier
+                .padding(top = 10.dp, end = 10.dp)
+                .align(Alignment.TopEnd)
+                .clickable { onClickFavorite() },
+            painter = if (isFavorite) {
+                painterResource(id = com.tving.core.designsystem.R.drawable.ic_check_circle)
+            } else {
+                painterResource(id = com.tving.core.designsystem.R.drawable.ic_heart_circle)
+            },
+            contentDescription = "favorite",
         )
     }
 }
