@@ -31,19 +31,22 @@ class HomeViewModel @Inject constructor(
      * 통합 검색 (비디오 + 이미지)
      */
     fun searchContent() {
-        val query = state.value.searchText
-        if (query.isEmpty()) return
+        val searchText = state.value.searchText
+        if (searchText.isEmpty()) return
 
         viewModelScope.launch {
             try {
                 updateLoading(true)
 
-                val videoResult = getSearchVideoUseCase(query = query)
-                val imageResult = getSearchImageUseCase(query = query)
+                val videoResult = getSearchVideoUseCase(query = searchText)
+                val imageResult = getSearchImageUseCase(query = searchText)
 
                 val hasResults = videoResult.data.isNotEmpty() || imageResult.data.isNotEmpty()
 
-                Log.e("tetest", "tetest, hasResults === $hasResults")
+                Log.e("tetest", "tetest11, searchText === $searchText")
+                Log.e("tetest", "tetest22, hasResults === $hasResults")
+                Log.e("tetest", "tetest33, videoResult.data.isNotEmpty() === ${videoResult.data.isNotEmpty()}")
+                Log.e("tetest", "tetest44, imageResult.data.isNotEmpty() === ${imageResult.data.isNotEmpty()}")
 
                 if (hasResults) {
                     updateSearchState(SearchState.Success)
@@ -53,6 +56,7 @@ class HomeViewModel @Inject constructor(
                     updateSearchState(SearchState.Empty)
                 }
             } catch (e: Exception) {
+                Log.e("tetest", "tetest, Exception === ${e.message}", e)
                 updateSearchState(SearchState.Fail)
             } finally {
                 Log.e("tetest", "tetest, SearchState === ${state.value.searchState}")

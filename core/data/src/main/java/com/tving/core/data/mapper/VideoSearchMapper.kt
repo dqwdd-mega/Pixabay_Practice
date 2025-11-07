@@ -15,25 +15,25 @@ fun BaseResponse<List<VideoSearchResponse>>.toDomain(): BaseResult<List<VideoSea
 
 fun VideoSearchResponse.toDomain(): VideoSearch {
     // 가장 적합한 품질 선택 (medium > small > tiny > large 순)
-    val bestVideo = videos.medium ?: videos.small ?: videos.tiny ?: videos.large
+    val bestVideo = videos?.medium ?: videos?.small ?: videos?.tiny ?: videos?.large
     val videoUrl = bestVideo?.url ?: ""
     val thumbnailUrl = bestVideo?.thumbnail ?: ""
 
     return VideoSearch(
-        id = id,
-        pageURL = pageURL,
-        type = type,
-        tags = tags,
-        duration = duration,
-        pictureId = pictureId,
+        id = id ?: 0,
+        pageURL = pageURL ?: "",
+        type = type ?: "",
+        tags = tags ?: "",
+        duration = duration ?: 0,
+        pictureId = pictureId ?: "",
         videoUrl = videoUrl,
         thumbnailUrl = thumbnailUrl,
-        views = views,
-        downloads = downloads,
-        likes = likes,
-        comments = comments,
-        userId = userId,
-        user = user,
-        userImageURL = userImageURL
+        views = views ?: 0,
+        downloads = downloads ?: 0,
+        likes = likes ?: 0,
+        comments = comments ?: 0,
+        userId = userId ?: 0,
+        user = user ?: "",
+        userImageURL = userImageURL ?: ""
     )
 }
