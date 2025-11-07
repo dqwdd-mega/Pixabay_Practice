@@ -44,13 +44,14 @@ import com.tving.feat.home.R
 fun SearchSuccessCard(
     modifier: Modifier = Modifier,
     state: HomeContract.HomeState,
-    onLoadMore: () -> Unit = {},
+    onRequestMore: () -> Unit = {},
 ) {
     val configuration = LocalConfiguration.current
-    val gridColumns = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
+    val isLand = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val gridColumns = if (isLand) 3 else 2
     val gridState = rememberLazyGridState()
 
-    val shouldLoadMore by remember {
+    val requestMore by remember {
         derivedStateOf {
             val lastVisibleItem = gridState.layoutInfo.visibleItemsInfo.lastOrNull()
             val totalItems = gridState.layoutInfo.totalItemsCount
@@ -58,9 +59,9 @@ fun SearchSuccessCard(
         }
     }
 
-    LaunchedEffect(shouldLoadMore) {
-        if (shouldLoadMore && state.images.isNotEmpty()) {
-            onLoadMore()
+    LaunchedEffect(requestMore) {
+        if (requestMore && state.images.isNotEmpty()) {
+            onRequestMore()
         }
     }
 
@@ -153,7 +154,6 @@ fun SearchSuccessCard(
             }
         }
 
-        // Loading More Indicator
         if (state.searchImagePagingLoading) {
             item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(gridColumns) }) {
                 Box(

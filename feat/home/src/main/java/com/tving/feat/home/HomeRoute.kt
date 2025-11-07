@@ -125,7 +125,7 @@ fun HomeScreen(
                 SearchState.Success -> SearchSuccessCard(
                     modifier = Modifier,
                     state = state,
-                    onLoadMore = onLoadMoreImages
+                    onRequestMore = onLoadMoreImages
                 )
                 SearchState.Empty -> SearchIdleCard(modifier = Modifier)
                 SearchState.Fail -> SearchIdleCard(modifier = Modifier)
