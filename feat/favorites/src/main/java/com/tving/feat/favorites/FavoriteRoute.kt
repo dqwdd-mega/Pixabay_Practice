@@ -18,8 +18,8 @@ import com.tving.core.designsystem.theme.ColorTokens.White
 import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.core.navigation.LocalNavController
-import com.tving.core.navigation.NavigationRoute
-import com.tving.feat.contentdetail.navigation.navigateToContentDetail
+import com.tving.feat.contentdetail.navigation.navigateToContentDetailWithImage
+import com.tving.feat.contentdetail.navigation.navigateToContentDetailWithVideo
 import com.tving.feat.favorites.component.FavoriteContentCard
 import kotlinx.coroutines.flow.collectLatest
 
@@ -34,15 +34,13 @@ fun FavoriteRoute(
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
                 is FavoritesContract.SideEffect.NavigateToContentDetailWithVideo -> {
-                    navController.navigateToContentDetail(
-                        contentType = NavigationRoute.ContentDetailScreen.CONTENT_TYPE_VIDEO,
-                        contentId = sideEffect.video.id
+                    navController.navigateToContentDetailWithVideo(
+                        video = sideEffect.video
                     )
                 }
                 is FavoritesContract.SideEffect.NavigateToContentDetailWithImage -> {
-                    navController.navigateToContentDetail(
-                        contentType = NavigationRoute.ContentDetailScreen.CONTENT_TYPE_IMAGE,
-                        contentId = sideEffect.image.id
+                    navController.navigateToContentDetailWithImage(
+                        image = sideEffect.image
                     )
                 }
             }

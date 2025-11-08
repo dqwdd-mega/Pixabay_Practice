@@ -57,7 +57,10 @@ fun HomeSearchBar(
             Image(
                 modifier = Modifier
                     .padding(end = 20.dp)
-                    .clickable { onClickClear() },
+                    .clickable {
+                        focusManager.clearFocus()
+                        onClickClear()
+                    },
                 painter = painterResource(id = R.drawable.ic_close_circle),
                 contentDescription = "clear button",
             )

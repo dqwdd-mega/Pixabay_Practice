@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tving.core.designsystem.theme.ColorTokens.White
 import com.tving.core.navigation.LocalNavController
-import com.tving.core.navigation.NavigationRoute
-import com.tving.feat.contentdetail.navigation.navigateToContentDetail
+import com.tving.feat.contentdetail.navigation.navigateToContentDetailWithImage
+import com.tving.feat.contentdetail.navigation.navigateToContentDetailWithVideo
 import com.tving.feat.home.component.HomeSearchBar
 import com.tving.feat.home.component.SearchEmptyCard
 import com.tving.feat.home.component.SearchFailCard
@@ -42,15 +42,13 @@ fun HomeRoute(
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
                 is HomeContract.SideEffect.NavigateToContentDetailWithVideo -> {
-                    navController.navigateToContentDetail(
-                        contentType = NavigationRoute.ContentDetailScreen.CONTENT_TYPE_VIDEO,
-                        contentId = sideEffect.video.id
+                    navController.navigateToContentDetailWithVideo(
+                        video = sideEffect.video
                     )
                 }
                 is HomeContract.SideEffect.NavigateToContentDetailWithImage -> {
-                    navController.navigateToContentDetail(
-                        contentType = NavigationRoute.ContentDetailScreen.CONTENT_TYPE_IMAGE,
-                        contentId = sideEffect.image.id
+                    navController.navigateToContentDetailWithImage(
+                        image = sideEffect.image
                     )
                 }
             }

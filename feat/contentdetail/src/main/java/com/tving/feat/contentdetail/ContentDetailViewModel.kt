@@ -2,27 +2,22 @@ package com.tving.feat.contentdetail
 
 import androidx.lifecycle.viewModelScope
 import com.tving.core.common.base.BaseViewModel
+import com.tving.core.domain.model.pixabay.ImageSearch
+import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.core.domain.usecase.AddFavoriteImageUseCase
 import com.tving.core.domain.usecase.AddFavoriteVideoUseCase
-import com.tving.core.domain.usecase.GetFavoriteImagesUseCase
-import com.tving.core.domain.usecase.GetFavoriteVideosUseCase
 import com.tving.core.domain.usecase.IsFavoriteImageUseCase
 import com.tving.core.domain.usecase.IsFavoriteVideoUseCase
 import com.tving.core.domain.usecase.RemoveFavoriteImageUseCase
 import com.tving.core.domain.usecase.RemoveFavoriteVideoUseCase
-import com.tving.core.navigation.NavigationRoute
 import com.tving.feat.contentdetail.model.ContentInfo
-import com.tving.feat.contentdetail.model.ContentType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ContentDetailViewModel @Inject constructor(
-    private val getFavoriteVideosUseCase: GetFavoriteVideosUseCase,
-    private val getFavoriteImagesUseCase: GetFavoriteImagesUseCase,
     private val isFavoriteVideoUseCase: IsFavoriteVideoUseCase,
     private val isFavoriteImageUseCase: IsFavoriteImageUseCase,
     private val addFavoriteVideoUseCase: AddFavoriteVideoUseCase,
@@ -36,76 +31,61 @@ class ContentDetailViewModel @Inject constructor(
     override suspend fun handleEvent(event: ContentDetailContract.Event) {
     }
 
-    fun loadContent(contentType: String, contentId: Int) {
+    fun loadContent(
+        video: VideoSearch? = null,
+        image: ImageSearch? = null
+    ) {
         viewModelScope.launch {
             setLoading(true)
 
-            when (contentType) {
-                NavigationRoute.ContentDetailScreen.CONTENT_TYPE_VIDEO -> {
-                    val videos = getFavoriteVideosUseCase().firstOrNull() ?: emptyList()
-                    val video = videos.find { it.id == contentId }
-                    val isFavorite = isFavoriteVideoUseCase(contentId)
+            val contentInfo = video?.let { ContentInfo.fromVideo(it) }
+                ?: image?.let { ContentInfo.fromImage(it) }
+                ?: ContentInfo()
 
-                    setContent(
-                        contentInfo = ContentInfo.fromVideo(video),
-                        isFavorite = isFavorite
-                    )
-                }
+            val isFavorite = video?.let { isFavoriteVideoUseCase(it.id) }
+                ?: image?.let { isFavoriteImageUseCase(it.id) }
+                ?: false
 
-                NavigationRoute.ContentDetailScreen.CONTENT_TYPE_IMAGE -> {
-                    val images = getFavoriteImagesUseCase().firstOrNull() ?: emptyList()
-                    val image = images.find { it.id == contentId }
-                    val isFavorite = isFavoriteImageUseCase(contentId)
+            setContent(
+                contentInfo = contentInfo,
+                video = video,
+                image = image,
+                isFavorite = isFavorite
+            )
 
-                    setContent(
-                        contentInfo = ContentInfo.fromImage(image),
-                        isFavorite = isFavorite
-                    )
-                }
-
-                else -> {
-                    setLoading(false)
-                }
-            }
+            setLoading(false)
         }
     }
 
     fun onOffFavorite() {
         viewModelScope.launch {
-            val currentState = _state.value
-            val contentInfo = currentState.contentInfo
-
-            when (contentInfo.type) {
-                ContentType.VIDEO -> {
-                    if (isFavoriteVideoUseCase(contentInfo.id)) {
-                        removeFavoriteVideoUseCase(contentInfo.id)
-                        setFavoriteStatus(false)
-                    } else {
-                        val videos = getFavoriteVideosUseCase().firstOrNull() ?: emptyList()
-                        val video = videos.find { it.id == contentInfo.id }
-
-                        video?.let {
-                            addFavoriteVideoUseCase(it)
-                            setFavoriteStatus(true)
-                        }
-                    }
-                }
-
-                ContentType.IMAGE -> {
-                    if (isFavoriteImageUseCase(contentInfo.id)) {
-                        removeFavoriteImageUseCase(contentInfo.id)
-                        setFavoriteStatus(false)
-                    } else {
-                        val images = getFavoriteImagesUseCase().firstOrNull() ?: emptyList()
-                        val image = images.find { it.id == contentInfo.id }
-
-                        image?.let {
-                            addFavoriteImageUseCase(it)
-                            setFavoriteStatus(true)
-                        }
-                    }
-                }
+            state.value.video?.let { video ->
+                onOffVideoFavorite(video)
             }
+
+            state.value.image?.let { image ->
+                onOffImageFavorite(image)
+            }
+        }
+    }
+
+    private suspend fun onOffVideoFavorite(video: VideoSearch) {
+        if (isFavoriteVideoUseCase(video.id)) {
+            removeFavoriteVideoUseCase(video.id)
+            setFavoriteStatus(false)
+        } else {
+            addFavoriteVideoUseCase(video)
+            setFavoriteStatus(true)
+        }
+    }
+
+    private suspend fun onOffImageFavorite(image: ImageSearch) {
+        if (isFavoriteImageUseCase(image.id)) {
+            removeFavoriteImageUseCase(image.id)
+            setFavoriteStatus(false)
+        } else {
+            addFavoriteImageUseCase(image)
+            setFavoriteStatus(true)
         }
     }
 
@@ -113,11 +93,18 @@ class ContentDetailViewModel @Inject constructor(
         reduce { copy(loading = loading) }
     }
 
-    private fun setContent(contentInfo: ContentInfo, isFavorite: Boolean) {
+    private fun setContent(
+        contentInfo: ContentInfo,
+        video: VideoSearch? = null,
+        image: ImageSearch? = null,
+        isFavorite: Boolean
+    ) {
         reduce {
             copy(
                 loading = false,
                 contentInfo = contentInfo,
+                video = video,
+                image = image,
                 isFavorite = isFavorite
             )
         }

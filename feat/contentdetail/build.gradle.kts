@@ -75,4 +75,7 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.network.okhttp)
     implementation(libs.coil.svg)
+    
+    // gson
+    implementation(libs.gson)
 }

@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tving.core.designsystem.theme.ColorTokens.White
+import com.tving.core.domain.model.pixabay.ImageSearch
+import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.feat.contentdetail.component.ContentInfoCard
 import com.tving.feat.contentdetail.component.MediaComponent
 import com.tving.feat.contentdetail.component.UserInfoCard
@@ -25,14 +27,14 @@ import com.tving.feat.contentdetail.model.ContentInfo
 
 @Composable
 fun ContentDetailRoute(
-    contentType: String,
-    contentId: Int,
+    video: VideoSearch? = null,
+    image: ImageSearch? = null,
     viewModel: ContentDetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-
-    LaunchedEffect(contentType, contentId) {
-        viewModel.loadContent(contentType, contentId)
+    
+    LaunchedEffect(video, image) {
+        viewModel.loadContent(video, image)
     }
     
     ContentDetailScreen(
