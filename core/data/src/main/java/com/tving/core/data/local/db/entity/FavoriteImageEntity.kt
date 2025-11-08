@@ -23,7 +23,8 @@ data class FavoriteImageEntity(
     val userId: Int,
     val user: String,
     val userImageURL: String,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val localPreviewPath: String? = null
 ) {
     fun toDomain(): ImageSearch {
         return ImageSearch(
@@ -42,7 +43,8 @@ data class FavoriteImageEntity(
             comments = comments,
             userId = userId,
             user = user,
-            userImageURL = userImageURL
+            userImageURL = userImageURL,
+            localPreviewPath = localPreviewPath
         )
     }
 
@@ -64,7 +66,8 @@ data class FavoriteImageEntity(
                 comments = image.comments,
                 userId = image.userId,
                 user = image.user,
-                userImageURL = image.userImageURL
+                userImageURL = image.userImageURL,
+                localPreviewPath = image.localPreviewPath
             )
         }
     }

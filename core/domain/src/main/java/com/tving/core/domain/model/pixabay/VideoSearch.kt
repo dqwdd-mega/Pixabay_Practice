@@ -14,7 +14,8 @@ data class VideoSearch(
     val comments: Int,
     val userId: Int,
     val user: String,
-    val userImageURL: String
+    val userImageURL: String,
+    val localThumbnailPath: String? = null
 ) {
     val videoUrl: String
         get() {
@@ -23,7 +24,7 @@ data class VideoSearch(
 
     val thumbnailUrl: String
         get() {
-            return videos?.small?.thumbnail ?: "" // small 선택
+            return localThumbnailPath ?: (videos?.small?.thumbnail ?: "")
         }
 }
 

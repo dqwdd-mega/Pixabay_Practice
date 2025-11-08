@@ -113,7 +113,7 @@ fun FavoriteContentCard(
 
             items(images) { image ->
                 FavoriteItem(
-                    path = image.previewURL,
+                    path = image.getPreviewImageUrl(),
                     tags = image.tags,
                     isFavorite = isImageFavorite(image.id),
                     onClickContent = { onClickImageContent(image) },

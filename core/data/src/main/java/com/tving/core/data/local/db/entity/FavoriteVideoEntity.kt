@@ -22,7 +22,8 @@ data class FavoriteVideoEntity(
     val userId: Int,
     val user: String,
     val userImageURL: String,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val localThumbnailPath: String? = null
 ) {
     fun toDomain(): VideoSearch {
         return VideoSearch(
@@ -39,7 +40,8 @@ data class FavoriteVideoEntity(
             comments = comments,
             userId = userId,
             user = user,
-            userImageURL = userImageURL
+            userImageURL = userImageURL,
+            localThumbnailPath = localThumbnailPath
         )
     }
 
@@ -59,7 +61,8 @@ data class FavoriteVideoEntity(
                 comments = video.comments,
                 userId = video.userId,
                 user = video.user,
-                userImageURL = video.userImageURL
+                userImageURL = video.userImageURL,
+                localThumbnailPath = video.localThumbnailPath
             )
         }
     }

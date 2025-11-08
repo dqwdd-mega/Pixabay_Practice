@@ -49,7 +49,7 @@ object DatabaseModule {
             FavoriteDatabase::class.java,
             "favorite.db"
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(FavoriteDatabase.MIGRATION_1_2)
             .build()
     }
 

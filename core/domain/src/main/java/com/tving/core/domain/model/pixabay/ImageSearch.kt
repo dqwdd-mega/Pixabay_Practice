@@ -16,5 +16,10 @@ data class ImageSearch(
     val comments: Int,
     val userId: Int,
     val user: String,
-    val userImageURL: String
-)
+    val userImageURL: String,
+    val localPreviewPath: String? = null
+) {
+    fun getPreviewImageUrl(): String {
+        return localPreviewPath ?: previewURL
+    }
+}
