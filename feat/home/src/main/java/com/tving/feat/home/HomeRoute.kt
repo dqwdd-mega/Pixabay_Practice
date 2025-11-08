@@ -93,8 +93,8 @@ fun HomeRoute(
         onLoadMoreImages = { viewModel.searchImages() },
         onClickOnOffVideoFavorite = { viewModel.onOffVideoFavorite() },
         onClickOnOffImageFavorite = { image -> viewModel.onOffImageFavorite(image) },
-        onClickVideoContent = { video -> viewModel.intent(HomeContract.Event.ClickVideoContent(video)) },
-        onClickImageContent = { image -> viewModel.intent(HomeContract.Event.ClickImageContent(image)) },
+        onClickVideoContent = { video -> viewModel.intentThrottle(HomeContract.Event.ClickVideoContent(video)) },
+        onClickImageContent = { image -> viewModel.intentThrottle(HomeContract.Event.ClickImageContent(image)) },
     )
 }
 

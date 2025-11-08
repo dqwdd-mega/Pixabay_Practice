@@ -53,8 +53,8 @@ fun FavoriteRoute(
         images = state.favoriteImages,
         isVideoFavorite = { videoId -> state.isVideoFavorite(videoId) },
         isImageFavorite = { imageId -> state.isImageFavorite(imageId) },
-        onClickVideoContent = { video -> viewModel.intent(FavoritesContract.Event.ClickVideoContent(video)) },
-        onClickImageContent = { image -> viewModel.intent(FavoritesContract.Event.ClickImageContent(image)) },
+        onClickVideoContent = { video -> viewModel.intentThrottle(FavoritesContract.Event.ClickVideoContent(video)) },
+        onClickImageContent = { image -> viewModel.intentThrottle(FavoritesContract.Event.ClickImageContent(image)) },
         onClickOnOffVideoFavorite = { video -> viewModel.onOffVideoFavorite(video) },
         onClickOnOffImageFavorite = { image -> viewModel.onOffImageFavorite(image) },
     )

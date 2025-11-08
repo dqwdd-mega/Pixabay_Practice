@@ -84,12 +84,11 @@ abstract class BaseViewModel<State : BaseContract.UiState, Event : BaseContract.
         }
     }
 
-    protected fun handleEventWithThrottle(
-        throttleTime: Long = 800L,
+    private fun handleEventWithThrottle(
+        throttleTime: Long = 1000L,
         action: suspend () -> Unit
     ) {
-        // 액션 함수의 해시코드로 고유 ID 생성
-        val eventId = "action_${action.hashCode()}"
+        val eventId = "action_${System.currentTimeMillis()}"
         executeWithThrottle(eventId, throttleTime, action)
     }
 }
