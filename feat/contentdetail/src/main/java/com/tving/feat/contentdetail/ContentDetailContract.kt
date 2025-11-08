@@ -17,5 +17,7 @@ object ContentDetailContract {
 
     sealed interface Event : BaseContract.Event
 
-    sealed interface SideEffect : BaseContract.SideEffect
+    sealed interface SideEffect : BaseContract.SideEffect {
+        data class ShowToast(val message: String) : SideEffect
+    }
 }

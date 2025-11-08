@@ -2,6 +2,7 @@ package com.tving.core.data.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.tving.core.data.interceptor.HttpErrorInterceptor
 import com.tving.core.data.interceptor.PixabayAddParameterInterceptor
 import dagger.Module
 import dagger.Provides
@@ -38,8 +39,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideHttpErrorInterceptor(): HttpErrorInterceptor {
+        return HttpErrorInterceptor()
+    }
+
+    @Provides
+    @Singleton
     fun provideOkHttpClient(
-        addParameterInterceptor: PixabayAddParameterInterceptor
+        addParameterInterceptor: PixabayAddParameterInterceptor,
+        httpErrorInterceptor: HttpErrorInterceptor
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -47,6 +55,7 @@ object NetworkModule {
 
         return OkHttpClient.Builder()
             .addInterceptor(addParameterInterceptor)
+            .addInterceptor(httpErrorInterceptor)
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)

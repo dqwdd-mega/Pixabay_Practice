@@ -36,40 +36,61 @@ class ContentDetailViewModel @Inject constructor(
         image: ImageSearch? = null
     ) {
         viewModelScope.launch {
-            setLoading(true)
+            runCatching {
+                setLoading(true)
 
-            val contentInfo = video?.let { ContentInfo.fromVideo(it) }
-                ?: image?.let { ContentInfo.fromImage(it) }
-                ?: ContentInfo()
+                val contentInfo = video?.let { ContentInfo.fromVideo(it) }
+                    ?: image?.let { ContentInfo.fromImage(it) }
+                    ?: ContentInfo()
 
-            val isFavorite = video?.let { isFavoriteVideoUseCase(it.id) }
-                ?: image?.let { isFavoriteImageUseCase(it.id) }
-                ?: false
+                val isFavorite = checkIsFavorite(video, image)
 
-            setContent(
-                contentInfo = contentInfo,
-                video = video,
-                image = image,
-                isFavorite = isFavorite
-            )
-
-            setLoading(false)
+                setContent(
+                    contentInfo = contentInfo,
+                    video = video,
+                    image = image,
+                    isFavorite = isFavorite
+                )
+            }.onFailure { e ->
+                handleError(e)
+            }.also {
+                setLoading(false)
+            }
         }
     }
 
     fun onOffFavorite() {
         viewModelScope.launch {
-            state.value.video?.let { video ->
-                onOffVideoFavorite(video)
-            }
+            runCatching {
+                state.value.video?.let { video ->
+                    toggleVideoFavorite(video)
+                }
 
-            state.value.image?.let { image ->
-                onOffImageFavorite(image)
+                state.value.image?.let { image ->
+                    toggleImageFavorite(image)
+                }
+            }.onFailure { e ->
+                handleError(e)
             }
         }
     }
 
-    private suspend fun onOffVideoFavorite(video: VideoSearch) {
+    /**
+     * 즐겨찾기 상태 확인 UseCase 호출
+     */
+    private suspend fun checkIsFavorite(
+        video: VideoSearch?,
+        image: ImageSearch?
+    ): Boolean {
+        return video?.let { isFavoriteVideoUseCase(it.id) }
+            ?: image?.let { isFavoriteImageUseCase(it.id) }
+            ?: false
+    }
+
+    /**
+     * 비디오 즐겨찾기 토글 UseCase 호출
+     */
+    private suspend fun toggleVideoFavorite(video: VideoSearch) {
         if (isFavoriteVideoUseCase(video.id)) {
             removeFavoriteVideoUseCase(video.id)
             setFavoriteStatus(false)
@@ -79,7 +100,10 @@ class ContentDetailViewModel @Inject constructor(
         }
     }
 
-    private suspend fun onOffImageFavorite(image: ImageSearch) {
+    /**
+     * 이미지 즐겨찾기 토글 UseCase 호출
+     */
+    private suspend fun toggleImageFavorite(image: ImageSearch) {
         if (isFavoriteImageUseCase(image.id)) {
             removeFavoriteImageUseCase(image.id)
             setFavoriteStatus(false)

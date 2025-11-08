@@ -37,5 +37,6 @@ object HomeContract {
     sealed interface SideEffect : BaseContract.SideEffect {
         data class NavigateToContentDetailWithVideo(val video: VideoSearch) : SideEffect
         data class NavigateToContentDetailWithImage(val image: ImageSearch) : SideEffect
+        data class ShowToast(val message: String) : SideEffect
     }
 }

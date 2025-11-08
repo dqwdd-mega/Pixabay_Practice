@@ -71,21 +71,37 @@ class FavoritesViewModel @Inject constructor(
 
     fun onOffVideoFavorite(video: VideoSearch) {
         viewModelScope.launch {
-            if (isFavoriteVideoUseCase(video.id)) {
-                removeFavoriteVideoUseCase(video.id)
-            } else {
-                addFavoriteVideoUseCase(video)
+            runCatching {
+                toggleVideoFavorite(video)
+            }.onFailure { e ->
+                handleError(e)
             }
         }
     }
 
     fun onOffImageFavorite(image: ImageSearch) {
         viewModelScope.launch {
-            if (isFavoriteImageUseCase(image.id)) {
-                removeFavoriteImageUseCase(image.id)
-            } else {
-                addFavoriteImageUseCase(image)
+            runCatching {
+                toggleImageFavorite(image)
+            }.onFailure { e ->
+                handleError(e)
             }
+        }
+    }
+
+    private suspend fun toggleVideoFavorite(video: VideoSearch) {
+        if (isFavoriteVideoUseCase(video.id)) {
+            removeFavoriteVideoUseCase(video.id)
+        } else {
+            addFavoriteVideoUseCase(video)
+        }
+    }
+
+    private suspend fun toggleImageFavorite(image: ImageSearch) {
+        if (isFavoriteImageUseCase(image.id)) {
+            removeFavoriteImageUseCase(image.id)
+        } else {
+            addFavoriteImageUseCase(image)
         }
     }
 }

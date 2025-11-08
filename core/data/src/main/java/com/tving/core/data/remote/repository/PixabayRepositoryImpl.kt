@@ -22,10 +22,11 @@ class PixabayRepositoryImpl @Inject constructor(
             return cached
         }
         
-        val result = remoteDataSource.searchVideo(query).toDomain()
-        cacheDataSource.cacheVideoSearch(query, result)
+        val response = remoteDataSource.searchVideo(query)
+        val domainResult = response.toDomain()
+        cacheDataSource.cacheVideoSearch(query, domainResult)
         
-        return result
+        return domainResult
     }
 
     override suspend fun searchImage(
@@ -38,9 +39,10 @@ class PixabayRepositoryImpl @Inject constructor(
             return cached
         }
         
-        val result = remoteDataSource.searchImage(query, page, perPage).toDomain()
-        cacheDataSource.cacheImageSearch(query, page, perPage, result)
+        val response = remoteDataSource.searchImage(query, page, perPage)
+        val domainResult = response.toDomain()
+        cacheDataSource.cacheImageSearch(query, page, perPage, domainResult)
         
-        return result
+        return domainResult
     }
 }

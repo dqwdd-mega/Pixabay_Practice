@@ -2,6 +2,7 @@ package com.tving.core.common.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tving.core.common.model.NetworkError
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,49 @@ abstract class BaseViewModel<State : BaseContract.UiState, Event : BaseContract.
         viewModelScope.launch {
             _sideEffect.send(effect)
         }
+    }
+
+    protected fun handleError(throwable: Throwable) {
+        val message = when (throwable) {
+            is com.tving.core.common.exception.NetworkException -> {
+                when (throwable.error) {
+                    is NetworkError.RateLimitExceeded -> {
+                        "API 호출 한도를 초과했습니다. 잠시 후 다시 시도해주세요."
+                    }
+                    is NetworkError.NetworkTimeout -> {
+                        "네트워크 연결이 지연되고 있습니다. 다시 시도해주세요."
+                    }
+                    is NetworkError.NetworkUnavailable -> {
+                        "인터넷 연결을 확인해주세요."
+                    }
+                    is NetworkError.Unauthorized -> {
+                        "인증에 실패했습니다."
+                    }
+                    is NetworkError.Forbidden -> {
+                        "접근 권한이 없습니다."
+                    }
+                    is NetworkError.NotFound -> {
+                        "요청하신 리소스를 찾을 수 없습니다."
+                    }
+                    is NetworkError.BadRequest -> {
+                        "잘못된 요청입니다."
+                    }
+                    is NetworkError.ServerError -> {
+                        val error = throwable.error
+                        "서버 오류가 발생했습니다. (${error.code})"
+                    }
+                    is NetworkError.Unknown -> {
+                        throwable.error.message
+                    }
+                }
+            }
+            else -> {
+                throwable.message ?: "알 수 없는 오류가 발생했습니다."
+            }
+        }
+        
+        @Suppress("UNCHECKED_CAST")
+        postSideEffect(BaseContract.CommonSideEffect.ShowToast(message) as SideEffect)
     }
 
     /**

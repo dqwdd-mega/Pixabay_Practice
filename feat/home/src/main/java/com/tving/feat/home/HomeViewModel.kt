@@ -2,6 +2,7 @@ package com.tving.feat.home
 
 import androidx.lifecycle.viewModelScope
 import com.tving.core.common.base.BaseViewModel
+import com.tving.core.domain.model.BaseResult
 import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.core.domain.usecase.AddFavoriteImageUseCase
@@ -94,31 +95,36 @@ class HomeViewModel @Inject constructor(
         if (searchText.isEmpty()) return
 
         viewModelScope.launch {
-            try {
+            runCatching {
                 updateLoading(true)
                 resetVideoPage()
                 resetImagePage()
 
-                val videoResult = getSearchVideoUseCase(query = searchText)
-                val imageResult = getSearchImageUseCase(
+                val videoResult = getSearchVideo(searchText)
+                val imageResult = getSearchImage(
                     query = searchText,
                     page = 1,
                     perPage = state.value.perPage
                 )
 
-                val hasResults = videoResult.data.isNotEmpty() || imageResult.data.isNotEmpty()
+                val videos = videoResult.data
+                val images = imageResult.data
+                val totalImageHits = imageResult.totalHits
+
+                val hasResults = videos.isNotEmpty() || images.isNotEmpty()
 
                 if (hasResults) {
                     updateSearchState(SearchState.Success)
-                    handleVideoResults(videoResult.data)
-                    handleImageResults(imageResult.data, isAppend = false)
-                    updateTotalImageHits(imageResult.totalHits)
+                    handleVideoResults(videos)
+                    handleImageResults(images, isAppend = false)
+                    updateTotalImageHits(totalImageHits)
                 } else {
                     updateSearchState(SearchState.Empty)
                 }
-            } catch (e: Exception) {
+            }.onFailure { e ->
                 updateSearchState(SearchState.Fail)
-            } finally {
+                handleError(e)
+            }.also {
                 updateLoading(false)
             }
         }
@@ -137,11 +143,11 @@ class HomeViewModel @Inject constructor(
         if (loadedImagesCount >= currentState.totalImageHits) return
 
         viewModelScope.launch {
-            try {
+            runCatching {
                 updateSearchImagePagingLoading(true)
 
                 val nextPage = currentState.currentImagePage + 1
-                val result = getSearchImageUseCase(
+                val result = getSearchImage(
                     query = searchText,
                     page = nextPage,
                     perPage = currentState.perPage
@@ -151,10 +157,9 @@ class HomeViewModel @Inject constructor(
                     handleImageResults(result.data, isAppend = true)
                     reduce { copy(currentImagePage = nextPage) }
                 }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
+            }.onFailure { e ->
+                handleError(e)
+            }.also {
                 updateSearchImagePagingLoading(false)
             }
         }
@@ -210,16 +215,10 @@ class HomeViewModel @Inject constructor(
         reduce { copy(showSearchRightContent = show) }
     }
 
-    /**
-     * 검색 시작 시 비디오 리셋
-     */
     private fun resetVideoPage() {
         reduce { copy(firstVideo = null, isFirstVideoFavorite = false) }
     }
 
-    /**
-     * 검색 시작 시 이미지 페이지 리셋
-     */
     private fun resetImagePage() {
         reduce { copy(currentImagePage = 1, images = emptyList(), totalImageHits = 0) }
     }
@@ -236,21 +235,53 @@ class HomeViewModel @Inject constructor(
         val video = state.value.firstVideo ?: return
 
         viewModelScope.launch {
-            if (isFavoriteVideoUseCase(video.id)) {
-                removeFavoriteVideoUseCase(video.id)
-            } else {
-                addFavoriteVideoUseCase(video)
+            runCatching {
+                onOffVideoFavoriteUseCase(video)
+            }.onFailure { e ->
+                handleError(e)
             }
         }
     }
 
     fun onOffImageFavorite(image: ImageSearch) {
         viewModelScope.launch {
-            if (isFavoriteImageUseCase(image.id)) {
-                removeFavoriteImageUseCase(image.id)
-            } else {
-                addFavoriteImageUseCase(image)
+            runCatching {
+                onOffImageFavoriteUseCase(image)
+            }.onFailure { e ->
+                handleError(e)
             }
+        }
+    }
+
+    private suspend fun getSearchVideo(query: String): BaseResult<List<VideoSearch>> {
+        return getSearchVideoUseCase(query = query)
+    }
+
+    private suspend fun getSearchImage(
+        query: String,
+        page: Int,
+        perPage: Int
+    ): BaseResult<List<ImageSearch>> {
+        return getSearchImageUseCase(
+            query = query,
+            page = page,
+            perPage = perPage
+        )
+    }
+
+    private suspend fun onOffVideoFavoriteUseCase(video: VideoSearch) {
+        if (isFavoriteVideoUseCase(video.id)) {
+            removeFavoriteVideoUseCase(video.id)
+        } else {
+            addFavoriteVideoUseCase(video)
+        }
+    }
+
+    private suspend fun onOffImageFavoriteUseCase(image: ImageSearch) {
+        if (isFavoriteImageUseCase(image.id)) {
+            removeFavoriteImageUseCase(image.id)
+        } else {
+            addFavoriteImageUseCase(image)
         }
     }
 }
