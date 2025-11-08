@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.tving.core.data.local.dao.PixabayCacheDao
 import com.tving.core.data.local.database.PixabayDatabase
+import com.tving.core.data.local.db.FavoriteDatabase
+import com.tving.core.data.local.db.dao.FavoriteDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +37,27 @@ object DatabaseModule {
         database: PixabayDatabase
     ): PixabayCacheDao {
         return database.pixabayCacheDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteDatabase(
+        @ApplicationContext context: Context
+    ): FavoriteDatabase {
+        return Room.databaseBuilder(
+            context,
+            FavoriteDatabase::class.java,
+            "favorite.db"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteDao(
+        database: FavoriteDatabase
+    ): FavoriteDao {
+        return database.favoriteDao()
     }
 }

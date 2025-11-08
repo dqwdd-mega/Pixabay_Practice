@@ -96,6 +96,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updateLoading(true)
+                resetVideoPage()
                 resetImagePage()
 
                 val videoResult = getSearchVideoUseCase(query = searchText)
@@ -210,7 +211,14 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * 검색 시작 시 페이지 리셋
+     * 검색 시작 시 비디오 리셋
+     */
+    private fun resetVideoPage() {
+        reduce { copy(firstVideo = null, isFirstVideoFavorite = false) }
+    }
+
+    /**
+     * 검색 시작 시 이미지 페이지 리셋
      */
     private fun resetImagePage() {
         reduce { copy(currentImagePage = 1, images = emptyList(), totalImageHits = 0) }
