@@ -53,6 +53,7 @@ dependencies {
     implementation(project(":feat:favorites"))
     implementation(project(":feat:contentdetail"))
 
+    implementation(project(":core:data"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:navigation"))
 

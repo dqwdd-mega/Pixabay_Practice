@@ -1,5 +1,6 @@
 package com.tving.core.data.remote.repository
 
+import com.tving.core.data.local.datasource.PixabayCacheDataSource
 import com.tving.core.data.mapper.toDomain
 import com.tving.core.data.remote.datasource.PixabayDataSource
 import com.tving.core.domain.model.BaseResult
@@ -7,12 +8,24 @@ import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.core.domain.repository.PixabayRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PixabayRepositoryImpl @Inject constructor(
-    private val dataSource: PixabayDataSource
+    private val remoteDataSource: PixabayDataSource,
+    private val cacheDataSource: PixabayCacheDataSource
 ) : PixabayRepository {
+    
     override suspend fun searchVideo(query: String): BaseResult<List<VideoSearch>> {
-        return dataSource.searchVideo(query).toDomain()
+        val cached = cacheDataSource.getVideoSearchCache(query)
+        if (cached != null) {
+            return cached
+        }
+        
+        val result = remoteDataSource.searchVideo(query).toDomain()
+        cacheDataSource.cacheVideoSearch(query, result)
+        
+        return result
     }
 
     override suspend fun searchImage(
@@ -20,6 +33,14 @@ class PixabayRepositoryImpl @Inject constructor(
         page: Int,
         perPage: Int
     ): BaseResult<List<ImageSearch>> {
-        return dataSource.searchImage(query, page, perPage).toDomain()
+        val cached = cacheDataSource.getImageSearchCache(query, page, perPage)
+        if (cached != null) {
+            return cached
+        }
+        
+        val result = remoteDataSource.searchImage(query, page, perPage).toDomain()
+        cacheDataSource.cacheImageSearch(query, page, perPage, result)
+        
+        return result
     }
 }

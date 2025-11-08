@@ -56,6 +56,9 @@ dependencies {
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp.loggin.interceptor)
 
+    // coroutines
+    implementation(libs.kotlinx.coroutines.core)
+
     // hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
@@ -63,5 +66,10 @@ dependencies {
 
     // datastore
     implementation(libs.androidx.datastore.preferences)
+
+    // room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
 }
