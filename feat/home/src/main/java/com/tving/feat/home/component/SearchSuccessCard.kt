@@ -200,7 +200,12 @@ fun FeaturedVideoSection(
     backgroundColor = 0xFFFFFFFF
 )
 fun PreviewFeaturedVideoSection() {
-    FeaturedVideoSection(firstVideo = null)
+    FeaturedVideoSection(
+        firstVideo = null,
+        videoFavorite = false,
+        onOnOffVideoFavorite = {},
+        onClickVideo = {}
+    )
 }
 
 @Composable
@@ -248,7 +253,7 @@ fun SearchImageItem(
     showBackground = true,
     apiLevel = 35,
     showSystemUi = false,
-    backgroundColor = 0xFF212121
+    backgroundColor = 0xFFFFFFFF
 )
 fun PreviewSearchSuccessCard() {
     SearchSuccessCard(
@@ -257,5 +262,11 @@ fun PreviewSearchSuccessCard() {
         searchImagePagingLoading = false,
         firstVideo = null,
         videoFavorite = false,
+        onRequestMore = {},
+        onClickOnOffVideoFavorite = {},
+        isImageFavorite = { false },
+        onClickOnOffImageFavorite = {},
+        onClickVideoContent = {},
+        onClickImageContent = {}
     )
 }

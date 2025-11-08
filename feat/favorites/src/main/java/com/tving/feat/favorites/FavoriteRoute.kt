@@ -50,7 +50,11 @@ fun FavoriteRoute(
     }
 
     FavoritesScreen(
-        state = state,
+        loading = state.loading,
+        videos = state.favoriteVideos,
+        images = state.favoriteImages,
+        isVideoFavorite = { videoId -> state.isVideoFavorite(videoId) },
+        isImageFavorite = { imageId -> state.isImageFavorite(imageId) },
         onClickVideoContent = { video -> viewModel.intent(FavoritesContract.Event.ClickVideoContent(video)) },
         onClickImageContent = { image -> viewModel.intent(FavoritesContract.Event.ClickImageContent(image)) },
         onClickOnOffVideoFavorite = { video -> viewModel.onOffVideoFavorite(video) },
@@ -60,7 +64,11 @@ fun FavoriteRoute(
 
 @Composable
 fun FavoritesScreen(
-    state: FavoritesContract.FavoritesState,
+    loading: Boolean,
+    videos: List<VideoSearch>,
+    images: List<ImageSearch>,
+    isVideoFavorite: (Int) -> Boolean,
+    isImageFavorite: (Int) -> Boolean,
     onClickVideoContent: (VideoSearch) -> Unit = {},
     onClickImageContent: (ImageSearch) -> Unit = {},
     onClickOnOffVideoFavorite: (VideoSearch) -> Unit = {},
@@ -74,17 +82,17 @@ fun FavoritesScreen(
     ) {
         FavoriteContentCard(
             modifier = Modifier,
-            videos = state.favoriteVideos,
-            images = state.favoriteImages,
-            isVideoFavorite = { videoId -> state.isVideoFavorite(videoId) },
-            isImageFavorite = { imageId -> state.isImageFavorite(imageId) },
+            videos = videos,
+            images = images,
+            isVideoFavorite = isVideoFavorite,
+            isImageFavorite = isImageFavorite,
             onClickVideoContent = onClickVideoContent,
             onClickImageContent = onClickImageContent,
             onClickOnOffVideoFavorite = onClickOnOffVideoFavorite,
             onClickOnOffImageFavorite = onClickOnOffImageFavorite,
         )
 
-        if (state.loading) {
+        if (loading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -99,7 +107,11 @@ fun FavoritesScreen(
 @Preview
 fun PreviewFavoritesScreen() {
     FavoritesScreen(
-        state = FavoritesContract.FavoritesState(),
+        loading = false,
+        videos = emptyList(),
+        images = emptyList(),
+        isVideoFavorite = { false },
+        isImageFavorite = { false },
         onClickVideoContent = {},
         onClickImageContent = {},
         onClickOnOffVideoFavorite = {},

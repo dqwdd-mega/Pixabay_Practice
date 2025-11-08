@@ -108,4 +108,3 @@ private fun PreviewHomeSearchBarWithText() {
         placeholderText = "Search videos and images...",
     )
 }
-

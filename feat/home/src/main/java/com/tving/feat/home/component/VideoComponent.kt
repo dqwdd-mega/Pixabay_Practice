@@ -61,16 +61,7 @@ fun VideoComponent(
                 width = 1.dp,
                 color = Black,
                 shape = RoundedCornerShape(8.dp)
-            )
-            .clickable {
-                isPlaying = isPlaying.not()
-
-                if (isPlaying) {
-                    exoPlayer.play()
-                } else {
-                    exoPlayer.pause()
-                }
-            },
+            ),
     ) {
         if (isPlaying.not()) {
             AsyncImage(
@@ -125,11 +116,18 @@ fun VideoComponent(
 }
 
 @Composable
-@Preview
+@Preview(
+    showBackground = true,
+    apiLevel = 35,
+    showSystemUi = false,
+    backgroundColor = 0xFFFFFFFF
+)
 fun PreviewVideoThumbnailComponent() {
     VideoComponent(
-        videoUrl = "https://...mp4",
-        thumbnailUrl = "https://...jpg",
-        favoriteOnOff = true
+        videoUrl = "https://example.com/video.mp4",
+        thumbnailUrl = "https://example.com/thumbnail.jpg",
+        favoriteOnOff = true,
+        onFavoriteClick = {},
+        onVideoClick = {}
     )
 }

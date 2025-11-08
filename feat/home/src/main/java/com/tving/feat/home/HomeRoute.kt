@@ -58,7 +58,16 @@ fun HomeRoute(
     }
 
     HomeScreen(
-        state = state,
+        loading = state.loading,
+        searchText = state.searchText,
+        showSearchRightContent = state.showSearchRightContent,
+        searchState = state.searchState,
+        images = state.images,
+        totalImageHits = state.totalImageHits,
+        searchImagePagingLoading = state.searchImagePagingLoading,
+        firstVideo = state.firstVideo,
+        isFirstVideoFavorite = state.isFirstVideoFavorite,
+        isImageFavorite = { imageId -> state.isImageFavorite(imageId) },
         onChangeSearchText = { viewModel.updateSearchText(it) },
         onClickSearchTextClear = { viewModel.updateSearchText("") },
         searchContent = { viewModel.searchContent() },
@@ -72,7 +81,16 @@ fun HomeRoute(
 
 @Composable
 fun HomeScreen(
-    state: HomeContract.HomeState,
+    loading: Boolean,
+    searchText: String,
+    showSearchRightContent: Boolean,
+    searchState: SearchState,
+    images: List<com.tving.core.domain.model.pixabay.ImageSearch>,
+    totalImageHits: Int,
+    searchImagePagingLoading: Boolean,
+    firstVideo: com.tving.core.domain.model.pixabay.VideoSearch?,
+    isFirstVideoFavorite: Boolean,
+    isImageFavorite: (Int) -> Boolean,
     onChangeSearchText: (String) -> Unit,
     onClickSearchTextClear: () -> Unit,
     searchContent: () -> Unit,
@@ -94,28 +112,28 @@ fun HomeScreen(
         ) {
             HomeSearchBar(
                 modifier = Modifier.fillMaxWidth(),
-                value = state.searchText,
+                value = searchText,
                 onValueChange = onChangeSearchText,
                 onClickClear = onClickSearchTextClear,
                 onSearch = searchContent,
-                showRightContent = state.showSearchRightContent,
+                showRightContent = showSearchRightContent,
                 placeholderText = stringResource(com.tving.feat.home.R.string.text_for_search_placeholder),
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            when (state.searchState) {
+            when (searchState) {
                 SearchState.Idle -> SearchIdleCard(modifier = Modifier)
                 SearchState.Success -> SearchSuccessCard(
                     modifier = Modifier,
-                    images = state.images,
-                    totalImageHits = state.totalImageHits,
-                    searchImagePagingLoading = state.searchImagePagingLoading,
-                    firstVideo = state.firstVideo,
-                    videoFavorite = state.isFirstVideoFavorite,
+                    images = images,
+                    totalImageHits = totalImageHits,
+                    searchImagePagingLoading = searchImagePagingLoading,
+                    firstVideo = firstVideo,
+                    videoFavorite = isFirstVideoFavorite,
                     onRequestMore = onLoadMoreImages,
                     onClickOnOffVideoFavorite = onClickOnOffVideoFavorite,
-                    isImageFavorite = { imageId -> state.isImageFavorite(imageId) },
+                    isImageFavorite = isImageFavorite,
                     onClickOnOffImageFavorite = onClickOnOffImageFavorite,
                     onClickVideoContent = onClickVideoContent,
                     onClickImageContent = onClickImageContent,
@@ -125,7 +143,7 @@ fun HomeScreen(
             }
         }
 
-        if (state.loading) {
+        if (loading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -140,7 +158,16 @@ fun HomeScreen(
 @Preview
 fun PreviewHomeScreen() {
     HomeScreen(
-        state = HomeContract.HomeState(),
+        loading = false,
+        searchText = "",
+        showSearchRightContent = false,
+        searchState = SearchState.Idle,
+        images = emptyList(),
+        totalImageHits = 0,
+        searchImagePagingLoading = false,
+        firstVideo = null,
+        isFirstVideoFavorite = false,
+        isImageFavorite = { false },
         onChangeSearchText = {},
         onClickSearchTextClear = {},
         searchContent = {},

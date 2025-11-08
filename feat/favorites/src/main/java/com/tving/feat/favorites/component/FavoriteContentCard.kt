@@ -183,11 +183,21 @@ fun FavoriteItem(
 }
 
 @Composable
-@Preview
+@Preview(
+    showBackground = true,
+    apiLevel = 35,
+    showSystemUi = false,
+    backgroundColor = 0xFFFFFFFF
+)
 fun PreviewFavoriteContentCard() {
     FavoriteContentCard(
         videos = emptyList(),
         images = emptyList(),
+        isVideoFavorite = { false },
+        isImageFavorite = { false },
+        onClickVideoContent = {},
+        onClickImageContent = {},
+        onClickOnOffVideoFavorite = {},
+        onClickOnOffImageFavorite = {}
     )
 }
-

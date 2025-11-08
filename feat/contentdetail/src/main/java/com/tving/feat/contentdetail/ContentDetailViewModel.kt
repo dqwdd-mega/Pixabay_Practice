@@ -2,8 +2,6 @@ package com.tving.feat.contentdetail
 
 import androidx.lifecycle.viewModelScope
 import com.tving.core.common.base.BaseViewModel
-import com.tving.core.domain.model.pixabay.ImageSearch
-import com.tving.core.domain.model.pixabay.VideoSearch
 import com.tving.core.domain.usecase.AddFavoriteImageUseCase
 import com.tving.core.domain.usecase.AddFavoriteVideoUseCase
 import com.tving.core.domain.usecase.GetFavoriteImagesUseCase
