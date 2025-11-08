@@ -30,27 +30,26 @@ import coil3.request.crossfade
 import com.tving.core.designsystem.R
 import com.tving.core.designsystem.theme.ColorTokens.Black
 import com.tving.core.designsystem.theme.ColorTokens.GreyD9D9D9
-import com.tving.core.domain.model.pixabay.ImageSearch
-import com.tving.core.domain.model.pixabay.VideoSearch
 
 @Composable
 fun MediaComponent(
     modifier: Modifier = Modifier,
-    video: VideoSearch? = null,
-    image: ImageSearch? = null
+    videoUrl: String,
+    thumbnailUrl: String,
+    imageUrl: String
 ) {
     when {
-        video != null -> {
+        videoUrl.isNotEmpty() && thumbnailUrl.isNotEmpty() -> {
             DetailVideoPlayer(
                 modifier = modifier,
-                videoUrl = video.videoUrl,
-                thumbnailUrl = video.thumbnailUrl
+                videoUrl = videoUrl,
+                thumbnailUrl = thumbnailUrl
             )
         }
-        image != null -> {
+        imageUrl.isNotEmpty() -> {
             DetailImageViewer(
                 modifier = modifier,
-                imageUrl = image.largeImageURL
+                imageUrl = imageUrl
             )
         }
         else -> {

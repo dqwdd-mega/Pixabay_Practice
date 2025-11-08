@@ -17,12 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tving.core.common.util.formatNumber
 import com.tving.core.designsystem.theme.ColorTokens.White
 import com.tving.feat.contentdetail.component.ContentInfoCard
 import com.tving.feat.contentdetail.component.MediaComponent
-import com.tving.feat.contentdetail.component.StatInfo
 import com.tving.feat.contentdetail.component.UserInfoCard
+import com.tving.feat.contentdetail.model.ContentInfo
 
 @Composable
 fun ContentDetailRoute(
@@ -35,11 +34,10 @@ fun ContentDetailRoute(
     LaunchedEffect(contentType, contentId) {
         viewModel.loadContent(contentType, contentId)
     }
-
+    
     ContentDetailScreen(
         loading = state.loading,
-        video = state.video,
-        image = state.image,
+        contentInfo = state.contentInfo,
         isFavorite = state.isFavorite,
         onClickFavorite = { viewModel.onOffFavorite() }
     )
@@ -48,8 +46,7 @@ fun ContentDetailRoute(
 @Composable
 fun ContentDetailScreen(
     loading: Boolean,
-    video: com.tving.core.domain.model.pixabay.VideoSearch?,
-    image: com.tving.core.domain.model.pixabay.ImageSearch?,
+    contentInfo: ContentInfo,
     isFavorite: Boolean,
     onClickFavorite: () -> Unit = {},
 ) {
@@ -64,15 +61,16 @@ fun ContentDetailScreen(
                 .padding(15.dp)
         ) {
             MediaComponent(
-                video = video,
-                image = image
+                videoUrl = contentInfo.videoUrl,
+                thumbnailUrl = contentInfo.thumbnailUrl,
+                imageUrl = contentInfo.imageUrl
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             UserInfoCard(
-                userName = video?.user ?: image?.user ?: "Unknown",
-                userImageUrl = video?.userImageURL ?: image?.userImageURL ?: "",
+                userName = contentInfo.userName,
+                userImageUrl = contentInfo.userImageUrl,
                 isFavorite = isFavorite,
                 onClickFavorite = onClickFavorite
             )
@@ -80,25 +78,8 @@ fun ContentDetailScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             ContentInfoCard(
-                stats = listOf(
-                    StatInfo(
-                        label = "Type",
-                        value = if (video != null) "Video" else "Photo"
-                    ),
-                    StatInfo(
-                        label = "Views",
-                        value = (video?.views ?: image?.views ?: 0).formatNumber()
-                    ),
-                    StatInfo(
-                        label = "Likes",
-                        value = (video?.likes ?: image?.likes ?: 0).formatNumber()
-                    ),
-                    StatInfo(
-                        label = "Downloads",
-                        value = (video?.downloads ?: image?.downloads ?: 0).formatNumber()
-                    )
-                ),
-                tags = video?.tags ?: image?.tags ?: ""
+                stats = contentInfo.getStats(),
+                tags = contentInfo.tags
             )
         }
 
@@ -123,8 +104,7 @@ fun ContentDetailScreen(
 fun PreviewContentDetailScreenWithVideo() {
     ContentDetailScreen(
         loading = false,
-        video = null,
-        image = null,
+        contentInfo = ContentInfo(),
         isFavorite = false,
         onClickFavorite = {}
     )
