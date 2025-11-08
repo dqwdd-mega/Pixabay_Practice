@@ -1,8 +1,6 @@
 package com.tving.feat.contentdetail
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,12 +14,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tving.core.common.util.formatNumber
 import com.tving.core.designsystem.theme.ColorTokens.White
-import com.tving.feat.contentdetail.component.DetailMediaComponent
+import com.tving.feat.contentdetail.component.ContentInfoCard
+import com.tving.feat.contentdetail.component.MediaComponent
+import com.tving.feat.contentdetail.component.StatInfo
+import com.tving.feat.contentdetail.component.UserInfoCard
 
 @Composable
 fun ContentDetailRoute(
@@ -62,22 +63,42 @@ fun ContentDetailScreen(
                 .fillMaxSize()
                 .padding(15.dp)
         ) {
-            DetailMediaComponent(
+            MediaComponent(
                 video = video,
                 image = image
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Image(
-                modifier = Modifier
-                    .clickable { onClickFavorite() },
-                painter = if (isFavorite) {
-                    painterResource(id = com.tving.core.designsystem.R.drawable.ic_heart)
-                } else {
-                    painterResource(id = com.tving.core.designsystem.R.drawable.ic_heart_empty)
-                },
-                contentDescription = "favorite",
+            UserInfoCard(
+                userName = video?.user ?: image?.user ?: "Unknown",
+                userImageUrl = video?.userImageURL ?: image?.userImageURL ?: "",
+                isFavorite = isFavorite,
+                onClickFavorite = onClickFavorite
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            ContentInfoCard(
+                stats = listOf(
+                    StatInfo(
+                        label = "Type",
+                        value = if (video != null) "Video" else "Photo"
+                    ),
+                    StatInfo(
+                        label = "Views",
+                        value = (video?.views ?: image?.views ?: 0).formatNumber()
+                    ),
+                    StatInfo(
+                        label = "Likes",
+                        value = (video?.likes ?: image?.likes ?: 0).formatNumber()
+                    ),
+                    StatInfo(
+                        label = "Downloads",
+                        value = (video?.downloads ?: image?.downloads ?: 0).formatNumber()
+                    )
+                ),
+                tags = video?.tags ?: image?.tags ?: ""
             )
         }
 
@@ -105,23 +126,6 @@ fun PreviewContentDetailScreenWithVideo() {
         video = null,
         image = null,
         isFavorite = false,
-        onClickFavorite = {}
-    )
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    apiLevel = 35,
-    showSystemUi = false,
-    backgroundColor = 0xFFFFFFFF
-)
-fun PreviewContentDetailScreenWithImage() {
-    ContentDetailScreen(
-        loading = false,
-        video = null,
-        image = null,
-        isFavorite = true,
         onClickFavorite = {}
     )
 }

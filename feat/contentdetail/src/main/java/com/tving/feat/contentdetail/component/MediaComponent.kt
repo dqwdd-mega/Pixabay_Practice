@@ -34,7 +34,7 @@ import com.tving.core.domain.model.pixabay.ImageSearch
 import com.tving.core.domain.model.pixabay.VideoSearch
 
 @Composable
-fun DetailMediaComponent(
+fun MediaComponent(
     modifier: Modifier = Modifier,
     video: VideoSearch? = null,
     image: ImageSearch? = null
@@ -181,58 +181,4 @@ fun EmptyMediaPlaceholder(
 )
 fun PreviewEmptyMediaPlaceholder() {
     EmptyMediaPlaceholder()
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    apiLevel = 35,
-    showSystemUi = false,
-    backgroundColor = 0xFFFFFFFF
-)
-fun PreviewDetailVideoPlayer() {
-    DetailVideoPlayer(
-        videoUrl = "https://example.com/video.mp4",
-        thumbnailUrl = "https://example.com/thumbnail.jpg"
-    )
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    apiLevel = 35,
-    showSystemUi = false,
-    backgroundColor = 0xFFFFFFFF
-)
-fun PreviewDetailVideoPlayerFavorited() {
-    DetailVideoPlayer(
-        videoUrl = "https://example.com/video.mp4",
-        thumbnailUrl = "https://example.com/thumbnail.jpg"
-    )
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    apiLevel = 35,
-    showSystemUi = false,
-    backgroundColor = 0xFFFFFFFF
-)
-fun PreviewDetailImageViewer() {
-    DetailImageViewer(
-        imageUrl = "https://example.com/image.jpg"
-    )
-}
-
-@Composable
-@Preview(
-    showBackground = true,
-    apiLevel = 35,
-    showSystemUi = false,
-    backgroundColor = 0xFFFFFFFF
-)
-fun PreviewDetailImageViewerFavorited() {
-    DetailImageViewer(
-        imageUrl = "https://example.com/image.jpg"
-    )
 }
