@@ -1,5 +1,8 @@
 package com.tving.feat.home
 
+import android.app.Activity
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,7 +43,21 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
     val navController = LocalNavController.current
+    var backPressedState by remember { mutableStateOf(true) }
+    var backPressedTime = 0L
+
+    BackHandler(enabled = backPressedState) {
+        if (System.currentTimeMillis() - backPressedTime <= 400L) {
+            (context as Activity).finish()
+        } else {
+            backPressedState = true
+            val finishText = context.getString(R.string.toast_noti_finish)
+            Toast.makeText(context.applicationContext, finishText, Toast.LENGTH_SHORT).show()
+        }
+        backPressedTime = System.currentTimeMillis()
+    }
 
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
@@ -115,7 +136,7 @@ fun HomeScreen(
                 onClickClear = onClickSearchTextClear,
                 onSearch = searchContent,
                 showRightContent = showSearchRightContent,
-                placeholderText = stringResource(com.tving.feat.home.R.string.text_for_search_placeholder),
+                placeholderText = stringResource(R.string.text_for_search_placeholder),
             )
 
             Spacer(modifier = Modifier.height(30.dp))

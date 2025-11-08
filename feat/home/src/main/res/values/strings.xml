@@ -7,4 +7,5 @@
     <string name="text_search_fail">Search Fail</string>
     <string name="text_featured_video">Featured Video</string>
     <string name="text_video_is_gone">Video is gone</string>
+    <string name="toast_noti_finish">한 번 더 누르시면 앱이 종료됩니다</string>
 </resources>
