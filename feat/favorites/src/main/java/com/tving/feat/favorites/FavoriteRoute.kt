@@ -43,6 +43,8 @@ fun FavoriteRoute(
                         image = sideEffect.image
                     )
                 }
+
+                is FavoritesContract.SideEffect.ShowToast -> TODO()
             }
         }
     }

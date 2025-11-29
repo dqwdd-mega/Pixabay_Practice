@@ -72,6 +72,8 @@ fun HomeRoute(
                         image = sideEffect.image
                     )
                 }
+
+                is HomeContract.SideEffect.ShowToast -> TODO()
             }
         }
     }
