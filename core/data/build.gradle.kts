@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tving.core.data"
+    namespace = "com.pixabay.core.data"
     compileSdk = 35
 
     defaultConfig {

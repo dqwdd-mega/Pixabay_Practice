@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tving.core.navigation"
+    namespace = "com.pixabay.core.navigation"
     compileSdk = 35
 
     defaultConfig {

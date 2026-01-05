@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tving_task_2025_11_05"
+    namespace = "com.example.pixabay"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.tving_task_2025_11_05"
+        applicationId = "com.example.pixabay"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

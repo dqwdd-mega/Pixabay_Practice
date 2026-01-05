@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tving.feat.favorites"
+    namespace = "com.pixabay.feat.favorites"
     compileSdk = 35
 
     defaultConfig {

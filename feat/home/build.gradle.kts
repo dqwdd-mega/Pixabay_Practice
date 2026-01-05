@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tving.feat.home"
+    namespace = "com.pixabay.feat.home"
     compileSdk = 35
 
     defaultConfig {

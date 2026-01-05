@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Tving_task_2025_11_05"
+rootProject.name = "Pixabay_test"
 include(":app")
 include(":feat:home")
 include(":feat:favorites")

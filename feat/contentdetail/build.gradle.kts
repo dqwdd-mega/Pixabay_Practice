@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tving.feat.contentdetail"
+    namespace = "com.pixabay.feat.contentdetail"
     compileSdk = 35
 
     defaultConfig {
