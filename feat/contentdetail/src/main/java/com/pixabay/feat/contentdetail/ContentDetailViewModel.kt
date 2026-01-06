@@ -37,8 +37,6 @@ class ContentDetailViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             runCatching {
-                setLoading(true)
-
                 val contentInfo = video?.let { ContentInfo.fromVideo(it) }
                     ?: image?.let { ContentInfo.fromImage(it) }
                     ?: ContentInfo()

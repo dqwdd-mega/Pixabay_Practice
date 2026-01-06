@@ -1,6 +1,7 @@
 package com.pixabay.feat.favorites.component
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -81,14 +83,21 @@ fun FavoriteContentCard(
         // videos
         if (videos.isNotEmpty()) {
             item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(gridColumns) }) {
+                SideEffect{
+                    Log.e("tetest", "tetest, 0101, 즐겨찾기한 비디오 텍스트")
+                }
                 Text(
                     text = "즐겨찾기한 비디오",
                     color = Black,
                 )
             }
 
-            items(videos) { video ->
+            items(
+                items = videos,
+                key = { video -> video.id }
+            ) { video ->
                 FavoriteItem(
+                    id = video.id.toString(),
                     path = video.thumbnailUrl,
                     tags = video.tags,
                     isFavorite = isVideoFavorite(video.id),
@@ -105,14 +114,21 @@ fun FavoriteContentCard(
         // images
         if (images.isNotEmpty()) {
             item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(gridColumns) }) {
+                SideEffect{
+                    Log.e("tetest", "tetest, 0202, 즐겨찾기한 이미지 텍스트")
+                }
                 Text(
                     text = "즐겨찾기한 이미지",
                     color = Black,
                 )
             }
 
-            items(images) { image ->
+            items(
+                items = images,
+                key = { image -> image.id }
+            ) { image ->
                 FavoriteItem(
+                    id = image.id.toString(),
                     path = image.getPreviewImageUrl(),
                     tags = image.tags,
                     isFavorite = isImageFavorite(image.id),
@@ -144,12 +160,16 @@ fun FavoriteContentCard(
 @Composable
 fun FavoriteItem(
     modifier: Modifier = Modifier,
+    id: String,
     path: String,
     tags: String,
     isFavorite: Boolean = false,
     onClickContent: () -> Unit = {},
     onClickFavorite: () -> Unit = {},
 ) {
+    SideEffect{
+        Log.e("tetest", "tetest, 1111, 즐겨찾기 홈, id === $id")
+    }
     Box(
         modifier = modifier
             .fillMaxWidth()

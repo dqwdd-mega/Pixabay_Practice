@@ -1,5 +1,6 @@
 package com.pixabay.feat.contentdetail.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +29,7 @@ import com.pixabay.core.designsystem.R
 
 @Composable
 fun UserInfoCard(
+    id: String = "",
     userName: String,
     userImageUrl: String,
     isFavorite: Boolean,
@@ -34,6 +37,9 @@ fun UserInfoCard(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    SideEffect{
+        Log.e("tetest", "tetest, 222, 즐겨찾기 디테일  , id === $id")
+    }
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,

@@ -8,7 +8,7 @@ import com.pixabay.feat.contentdetail.model.ContentInfo
 object ContentDetailContract {
 
     data class ContentDetailState(
-        val loading: Boolean = false,
+        val loading: Boolean = true,
         val contentInfo: ContentInfo = ContentInfo(),
         val video: VideoSearch? = null,
         val image: ImageSearch? = null,

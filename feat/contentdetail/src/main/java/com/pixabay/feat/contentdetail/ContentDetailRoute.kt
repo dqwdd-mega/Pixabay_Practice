@@ -1,5 +1,6 @@
 package com.pixabay.feat.contentdetail
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,11 +33,11 @@ fun ContentDetailRoute(
     viewModel: ContentDetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    
+
     LaunchedEffect(video, image) {
         viewModel.loadContent(video, image)
     }
-    
+
     ContentDetailScreen(
         loading = state.loading,
         contentInfo = state.contentInfo,
@@ -52,45 +53,48 @@ fun ContentDetailScreen(
     isFavorite: Boolean,
     onClickFavorite: () -> Unit = {},
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = White)
-    ) {
-        Column(
+    if (loading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Log.e("tetest", "tetest 99999")
+            CircularProgressIndicator()
+        }
+    } else {
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(15.dp)
+                .background(color = White)
         ) {
-            MediaComponent(
-                videoUrl = contentInfo.videoUrl,
-                thumbnailUrl = contentInfo.thumbnailUrl,
-                imageUrl = contentInfo.imageUrl
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            UserInfoCard(
-                userName = contentInfo.userName,
-                userImageUrl = contentInfo.userImageUrl,
-                isFavorite = isFavorite,
-                onClickFavorite = onClickFavorite
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ContentInfoCard(
-                stats = contentInfo.getStats(),
-                tags = contentInfo.tags
-            )
-        }
-
-        if (loading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+            Log.e("tetest", "tetest 1212123")
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(15.dp)
             ) {
-                CircularProgressIndicator()
+                MediaComponent(
+                    videoUrl = contentInfo.videoUrl,
+                    thumbnailUrl = contentInfo.thumbnailUrl,
+                    imageUrl = contentInfo.imageUrl
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                UserInfoCard(
+                    id = contentInfo.id.toString(),
+                    userName = contentInfo.userName,
+                    userImageUrl = contentInfo.userImageUrl,
+                    isFavorite = isFavorite,
+                    onClickFavorite = onClickFavorite
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ContentInfoCard(
+                    stats = contentInfo.getStats(),
+                    tags = contentInfo.tags
+                )
             }
         }
     }
