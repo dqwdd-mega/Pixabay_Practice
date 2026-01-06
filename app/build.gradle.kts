@@ -48,6 +48,13 @@ android {
     }
 }
 
+composeCompiler {
+    metricsDestination = project.layout.buildDirectory.dir("compose_metrics")
+    reportsDestination = project.layout.buildDirectory.dir("compose_reports")
+    enableStrongSkippingMode = true
+    enableIntrinsicRemember = true
+}
+
 dependencies {
     implementation(project(":feat:home"))
     implementation(project(":feat:favorites"))
