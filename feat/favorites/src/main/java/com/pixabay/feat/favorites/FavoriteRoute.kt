@@ -80,18 +80,6 @@ fun FavoritesScreen(
             .background(color = White)
             .padding(15.dp)
     ) {
-        FavoriteContentCard(
-            modifier = Modifier,
-            videos = videos,
-            images = images,
-            isVideoFavorite = isVideoFavorite,
-            isImageFavorite = isImageFavorite,
-            onClickVideoContent = onClickVideoContent,
-            onClickImageContent = onClickImageContent,
-            onClickOnOffVideoFavorite = onClickOnOffVideoFavorite,
-            onClickOnOffImageFavorite = onClickOnOffImageFavorite,
-        )
-
         if (loading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -99,6 +87,18 @@ fun FavoritesScreen(
             ) {
                 CircularProgressIndicator()
             }
+        } else {
+            FavoriteContentCard(
+                modifier = Modifier,
+                videos = videos,
+                images = images,
+                isVideoFavorite = isVideoFavorite,
+                isImageFavorite = isImageFavorite,
+                onClickVideoContent = onClickVideoContent,
+                onClickImageContent = onClickImageContent,
+                onClickOnOffVideoFavorite = onClickOnOffVideoFavorite,
+                onClickOnOffImageFavorite = onClickOnOffImageFavorite,
+            )
         }
     }
 }
